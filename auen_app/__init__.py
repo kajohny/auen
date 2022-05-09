@@ -9,7 +9,7 @@ def create_app():
     app = Flask(__name__)
 
     app.config['SECRET_KEY'] = 's3cr3tk3y'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/auen'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://kajohny:rootmysql@kajohny.mysql.pythonanywhere-services.com/kajohny$auen'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
     db.init_app(app)
