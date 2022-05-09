@@ -23,7 +23,14 @@ class Albums(db.Model):
     id = db.Column(db.Integer, primary_key=True)    
     album_title = db.Column(db.String(255))
     album_img = db.Column(db.String(255))
-    author_id = db.Column(db.Integer, db.ForeignKey('author.id'))    
+    author_id = db.Column(db.Integer, db.ForeignKey('author.id'))   
+
+class Genres(db.Model):
+    __tablename__ = 'genres'
+    __table_args__ = {'extend_existing':True}
+    id = db.Column(db.Integer, primary_key=True)
+    genre_name = db.Column(db.String(255))
+    genre_img = db.Column(db.String(255)) 
 
 class Music(db.Model):
     __tablename__ = 'music'
@@ -41,13 +48,6 @@ class Favourites(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     music_id = db.Column(db.Integer, db.ForeignKey('music.id'))
-
-class Genres(db.Model):
-    __tablename__ = 'genres'
-    __table_args__ = {'extend_existing':True}
-    id = db.Column(db.Integer, primary_key=True)
-    genre_name = db.Column(db.String(255))
-    genre_img = db.Column(db.String(255))
 
 class Playlists(db.Model):
     __tablename__ = 'playlists'
