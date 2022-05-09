@@ -38,7 +38,7 @@ class Music(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     music_title = db.Column(db.String(255))
     music_source = db.Column(db.String(255))
-    genre_id = db.Column(db.Integer, db.ForeignKey('genre.id'))
+    genre_id = db.Column(db.Integer, db.ForeignKey('genres.id'))
     author_id = db.Column(db.Integer, db.ForeignKey('author.id'))
     album_id = db.Column(db.Integer, db.ForeignKey('albums.id'))
 
