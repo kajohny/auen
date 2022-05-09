@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+<!----Album Single Section Start---->
+<div class="ms_album_single_wrapper">
+    <div class="album_single_data">
+        <div class="album_single_img">
+            <img src="{{ url_for('static', filename=album_single.album_img) }}" alt="" class="img-fluid">
+        </div>
+        <div class="album_single_text">
+            <h2>{{ album_single.album_title }}</h2>
+            <p class="singer_name">By - {{ artist_single.author_name }}</p>
+            <div class="album_feature">
+                <a href="#" class="album_date">{{ counter }} songs | 25:10</a>
+                <a href="#" class="album_date">Released March 23, 2018 | Music Company</a>
+            </div>
+            <div class="album_btn">
+                <a href="#" class="ms_btn play_btn"><span class="play_all"><img
+                            src="{{ url_for('static', filename='images/svg/play_all.svg') }}" alt="">Play
+                        All</span><span class="pause_all"><img src="images/svg/pause_all.svg" alt="">Pause</span></a>
+                <a href="#" class="ms_btn"><span class="play_all"><img
+                            src="{{ url_for('static', filename='images/svg/add_q.svg') }}" alt="">Add To
+                        Queue</span></a>
+            </div>
+        </div>
+        <div class="album_more_optn ms_more_icon">
+            <span><img src="{{ url_for('static', filename='images/svg/more.svg') }}" alt=""></span>
+        </div>
+        <ul class="more_option">
+            <li><a href="#"><span class="opt_icon"><span class="icon icon_fav"></span></span>Add To
+                    Favourites</a></li>
+            <li><a href="#"><span class="opt_icon"><span class="icon icon_queue"></span></span>Add To Queue</a>
+            </li>
+            <li><a href="#"><span class="opt_icon"><span class="icon icon_dwn"></span></span>Download Now</a>
+            </li>
+            <li><a href="#"><span class="opt_icon"><span class="icon icon_playlst"></span></span>Add To
+                    Playlist</a></li>
+            <li><a href="#"><span class="opt_icon"><span class="icon icon_share"></span></span>Share</a></li>
+        </ul>
+    </div>
+    <!----Song List---->
+    <div class="album_inner_list">
+        <div class="album_list_wrapper">
+            <ul class="album_list_name">
+                <li>#</li>
+                <li>Song Title</li>
+                <li>Artist</li>
+                <li class="text-center">Duration</li>
+                <li class="text-center">Add To Favourites</li>
+                <li class="text-center">More</li>
+            </ul>
+            {% for music in musics %}
+            <ul>
+                <li><a href="#"><span class="play_no">{{ loop.index }}</span><span class="play_hover"></span></a></li>
+                <li><a href="#">{{ music.music_title }}</a></li>
+                <li><a href="#">{{ music.author_name }}</a></li>
+                <li class="text-center"><a href="#">5:26</a></li>
+                <li class="text-center">
+                    <form action="" method="POST">
+                        <button class="btn text-white" style="background-color:transparent"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-heart" viewBox="0 0 16 16">
+                                <path
+                                    d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+                            </svg></button>
+                        <input type="hidden" name="music_id" value="{{ music.id }}">
+                    </form>
+                </li>
+                <li class="text-center ms_more_icon"><a href="javascript:;"><span
+                            class="ms_icon1 ms_active_icon"></span></a>
+                    <ul class="more_option">
+                        <li><a href="#"><span class="opt_icon"><span class="icon icon_fav"></span></span>Add To
+                                Favourites</a></li>
+                        <li><a href="#"><span class="opt_icon"><span class="icon icon_queue"></span></span>Add
+                                To Queue</a></li>
+                        <li><a href="#"><span class="opt_icon"><span class="icon icon_dwn"></span></span>Download
+                                Now</a></li>
+                        <li><a href="#"><span class="opt_icon"><span class="icon icon_playlst"></span></span>Add
+                                To Playlist</a></li>
+                        <li><a href="#"><span class="opt_icon"><span class="icon icon_share"></span></span>Share</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

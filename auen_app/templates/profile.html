@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<!----Edit Profile Wrapper Start---->
+<div class="ms_profile_wrapper">
+    <h1>My Profile</h1>
+    <div class="ms_profile_box">
+        <div class="ms_pro_img">
+            <img src="{{ url_for('static', filename='images/pfp.png') }}" alt="" class="img-fluid">
+            <div class="pro_img_overlay">
+                <i class="fa_icon edit_icon"></i>
+            </div>
+        </div>
+        <div class="ms_pro_form">
+            <div class="form-group">
+                <label>Your Name *</label>
+                <input type="text" class="form-control" name="name" value={{ name }} readonly>
+            </div>
+            <div class="form-group">
+                <label>Your Email *</label>
+                <input type="text" class="form-control" name="email" value={{ email }} readonly>
+            </div>
+            <div class="pro-form-btn text-center marger_top15">
+                <a href="{{ url_for('main.profile_edit') }}" class="ms_btn">Edit profile</a>
+                <a href="{{ url_for('main.playlist_user') }}" class="ms_btn">Playlists</a>
+                <a href="{{ url_for('main.favourites') }}" class="ms_btn">Your favourites</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
