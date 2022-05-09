@@ -32,9 +32,7 @@
                 </div>
             </div>
             {% for music in musics %}
-            {% if loop.index > 0 and loop.index < 6 %}
             <div class="col-lg-4 col-md-12 padding_right40">
-                
                 <div class="ms_weekly_box">
                     <div class="weekly_left">
                         <span class="w_top_no">
@@ -69,79 +67,7 @@
                     {% endif %}
                 </div>
                 <div class="ms_divider"></div>
-               
             </div>
-            {% elif loop.index > 5 and loop.index < 11 %}
-            <div class="col-lg-4 col-md-12 padding_right40">
-                <div class="ms_weekly_box">
-                    <div class="weekly_left">
-                        <span class="w_top_no">
-                            {{ loop.index}}
-                        </span>
-                        <div class="w_top_song">
-                            <div class="w_tp_song_img">
-                                <img src="{{ url_for('static', filename=music.album_img) }}" alt="" class="img-fluid">
-                                <div class="ms_song_overlay">
-                                </div>
-                                <div class="ms_play_icon">
-                                    <img src="{{ url_for('static', filename='images/svg/play.svg') }}" alt="">
-                                </div>
-                            </div>
-                            <div class="w_tp_song_name">
-                                <h3><a href="#">{{ music.music_title }}</a></h3>
-                                <p>{{ music.author_name }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    {% if current_user.is_authenticated %}
-                    <div class="weekly_right">
-                        <i class="fv_btn btn text-white fa-heart {{ 'far' if music.is_favourite == None else 'fas' }}"
-                            music_id="{{ music.id }}"></i>
-                    </div>
-                    {% else %}
-                    <div class="weekly_right">
-                        <i class="far fa-heart text-white" style="font-size: 24px"></i>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="ms_divider"></div>
-            </div>
-            {% elif loop.index > 10 and loop.index < 16 %}
-            <div class="col-lg-4 col-md-12 padding_right40">
-                <div class="ms_weekly_box">
-                    <div class="weekly_left">
-                        <span class="w_top_no">
-                            {{ loop.index}}
-                        </span>
-                        <div class="w_top_song">
-                            <div class="w_tp_song_img">
-                                <img src="{{ url_for('static', filename=music.album_img) }}" alt="" class="img-fluid">
-                                <div class="ms_song_overlay">
-                                </div>
-                                <div class="ms_play_icon">
-                                    <img src="{{ url_for('static', filename='images/svg/play.svg') }}" alt="">
-                                </div>
-                            </div>
-                            <div class="w_tp_song_name">
-                                <h3><a href="#">{{ music.music_title }}</a></h3>
-                                <p>{{ music.author_name }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    {% if current_user.is_authenticated %}
-                    <div class="weekly_right">
-                        <i class="fv_btn btn text-white fa-heart {{ 'far' if music.is_favourite == None else 'fas' }}"
-                            music_id="{{ music.id }}"></i>
-                    </div>
-                    {% else %}
-                    <div class="weekly_right">
-                        <i class="far fa-heart text-white" style="font-size: 24px"></i>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="ms_divider"></div>
-            </div>
-            {%  endif %}
             {% endfor %}
         </div>
     </div>
