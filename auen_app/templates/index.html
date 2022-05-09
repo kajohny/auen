@@ -236,24 +236,22 @@
                 <span class="veiw_all"><a href="#">view more</a></span>
             </div>
         </div>
-        {% for genre in genres %}
-        {% if loop.index == 1 %}
         <div class="col-lg-4">
             <div class="ms_genres_box">
-                <img src="{{ url_for('static', filename=genre.genre_img) }}" alt="" class="img-fluid" />
+                <img src="{{ url_for('static', filename='images/jazz.jpeg') }}" alt="" class="img-fluid" />
                 <div class="ms_main_overlay">
                     <div class="ms_box_overlay"></div>
                     <div class="ms_play_icon">
                         <img src="{{ url_for('static', filename='images/svg/play.svg') }}" alt="">
                     </div>
                     <div class="ovrly_text_div">
-                        <span class="ovrly_text1"><a href="#">{{ genre.genre_name }}</a></span>
+                        <span class="ovrly_text1"><a href="#">Jazz</a></span>
                         <span class="ovrly_text2"><a href="#">view song</a></span>
                     </div>
                 </div>
                 <div class="ms_box_overlay_on">
                     <div class="ovrly_text_div">
-                        <span class="ovrly_text1"><a href="#">{{ genre.genre_name }}</a></span>
+                        <span class="ovrly_text1"><a href="#">Jazz</a></span>
                         <span class="ovrly_text2"><a href="#">view song</a></span>
                     </div>
                 </div>
@@ -261,110 +259,103 @@
         </div>
         <div class="col-lg-6">
             <div class="row">
-                {% elif loop.index == 2%}
                 <div class="col-lg-4">
                     <div class="ms_genres_box">
-                        <img src="{{ url_for('static', filename=genre.genre_img) }}" alt="" class="img-fluid" />
+                        <img src="{{ url_for('static', filename='pop.jpg') }}" alt="" class="img-fluid" />
                         <div class="ms_main_overlay">
                             <div class="ms_box_overlay"></div>
                             <div class="ms_play_icon">
                                 <img src="{{ url_for('static', filename='images/svg/play.svg') }}" alt="">
                             </div>
                             <div class="ovrly_text_div">
-                                <span class="ovrly_text1"><a href="#">{{ genre.genre_name }}</a></span>
+                                <span class="ovrly_text1"><a href="#">Pop</a></span>
                             </div>
                         </div>
                         <div class="ms_box_overlay_on">
                             <div class="ovrly_text_div">
-                                <span class="ovrly_text1"><a href="#">{{ genre.genre_name }}</a></span>
+                                <span class="ovrly_text1"><a href="#">Pop</a></span>
                             </div>
                         </div>
                     </div>
                 </div>
-                {% elif loop.index == 3%}
                 <div class="col-lg-8">
                     <div class="ms_genres_box">
-                        <img src="{{ url_for('static', filename=genre.genre_img) }}" alt="" class="img-fluid" />
+                        <img src="{{ url_for('static', filename='images/folk.jpg') }}" alt="" class="img-fluid" />
                         <div class="ms_main_overlay">
                             <div class="ms_box_overlay"></div>
                             <div class="ms_play_icon">
                                 <img src="{{ url_for('static', filename='images/svg/play.svg') }}" alt="">
                             </div>
                             <div class="ovrly_text_div">
-                                <span class="ovrly_text1"><a href="#">{{ genre.genre_name }}</a></span>
+                                <span class="ovrly_text1"><a href="#">Folk</a></span>
                             </div>
                         </div>
                         <div class="ms_box_overlay_on">
                             <div class="ovrly_text_div">
-                                <span class="ovrly_text1"><a href="#">{{ genre.genre_name }}</a></span>
+                                <span class="ovrly_text1"><a href="#">Folk</a></span>
                             </div>
                         </div>
                     </div>
                 </div>
-                {% elif loop.index == 4 %}
                 <div class="col-lg-8">
                     <div class="ms_genres_box">
-                        <img src="{{ url_for('static', filename=genre.genre_img) }}" alt="" class="img-fluid" />
+                        <img src="{{ url_for('static', filename='images/metal.jpg'" alt="" class="img-fluid" />
                         <div class="ms_main_overlay">
                             <div class="ms_box_overlay"></div>
                             <div class="ms_play_icon">
                                 <img src="{{ url_for('static', filename='images/svg/play.svg') }}" alt="">
                             </div>
                             <div class="ovrly_text_div">
-                                <span class="ovrly_text1"><a href="#">{{ genre.genre_name }}</a></span>
+                                <span class="ovrly_text1"><a href="#">Metal</a></span>
                             </div>
                         </div>
                         <div class="ms_box_overlay_on">
                             <div class="ovrly_text_div">
-                                <span class="ovrly_text1"><a href="#">{{ genre.genre_name }}</a></span>
+                                <span class="ovrly_text1"><a href="#">Metal</a></span>
                             </div>
                         </div>
                     </div>
                 </div>
-                {% elif loop.index == 5 %}
                 <div class="col-lg-4">
                     <div class="ms_genres_box">
-                        <img src="{{ url_for('static', filename=genre.genre_img) }}" alt="" class="img-fluid" />
+                        <img src="{{ url_for('static', filename='images/stage.jpg') }}" alt="" class="img-fluid" />
                         <div class="ms_main_overlay">
                             <div class="ms_box_overlay"></div>
                             <div class="ms_play_icon">
                                 <img src="{{ url_for('static', filename='images/svg/play.svg') }}" alt="">
                             </div>
                             <div class="ovrly_text_div">
-                                <span class="ovrly_text1"><a href="#">{{ genre.genre_name }}</a></span>
+                                <span class="ovrly_text1"><a href="#">Stage</a></span>
                             </div>
                         </div>
                         <div class="ms_box_overlay_on">
                             <div class="ovrly_text_div">
-                                <span class="ovrly_text1"><a href="#">{{ genre.genre_name }}</a></span>
+                                <span class="ovrly_text1"><a href="#">Stage</a></span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        {% elif loop.index == 6 %}
         <div class="col-lg-2">
             <div class="ms_genres_box">
-                <img src="{{ url_for('static', filename=genre.genre_img) }}" alt="" class="img-fluid" />
+                <img src="{{ url_for('static', filename='images/rap.jpg') }}" alt="" class="img-fluid" />
                 <div class="ms_main_overlay">
                     <div class="ms_box_overlay"></div>
                     <div class="ms_play_icon">
                         <img src="{{ url_for('static', filename='images/svg/play.svg') }}" alt="">
                     </div>
                     <div class="ovrly_text_div">
-                        <span class="ovrly_text1"><a href="#">{{ genre.genre_name }}</a></span>
+                        <span class="ovrly_text1"><a href="#">Rap</a></span>
                     </div>
                 </div>
                 <div class="ms_box_overlay_on">
                     <div class="ovrly_text_div">
-                        <span class="ovrly_text1"><a href="#">{{ genre.genre_name }}</a></span>
+                        <span class="ovrly_text1"><a href="#">Rap</a></span>
                     </div>
                 </div>
             </div>
         </div>
-        {% endif %}
-        {% endfor %}
     </div>
 </div>
 <div class="ms_advr_wrapper ms_advr2">
