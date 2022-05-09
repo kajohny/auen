@@ -9,6 +9,13 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
 
+class Genres(db.Model):
+    __tablename__ = 'genres'
+    __table_args__ = {'extend_existing':True}
+    id = db.Column(db.Integer, primary_key=True)
+    genre_name = db.Column(db.String(255))
+    genre_img = db.Column(db.String(255))
+
 class Author(db.Model):
     __tablename__ = 'author'
     __table_args__ = {'extend_existing':True}
@@ -23,14 +30,7 @@ class Albums(db.Model):
     id = db.Column(db.Integer, primary_key=True)    
     album_title = db.Column(db.String(255))
     album_img = db.Column(db.String(255))
-    author_id = db.Column(db.Integer, db.ForeignKey('author.id'))   
-
-class Genres(db.Model):
-    __tablename__ = 'genres'
-    __table_args__ = {'extend_existing':True}
-    id = db.Column(db.Integer, primary_key=True)
-    genre_name = db.Column(db.String(255))
-    genre_img = db.Column(db.String(255)) 
+    author_id = db.Column(db.Integer, db.ForeignKey('author.id'))    
 
 class Music(db.Model):
     __tablename__ = 'music'
