@@ -58,11 +58,9 @@ def artist():
     
     return render_template('artist.html', authors=authors)
 
-@main.route('/genre')
+@main.route('/genres')
 def genre():
-    genres = Genres.query.all()
-    
-    return render_template('genres.html', genres=genres)
+    return render_template('genres.html')
 
 @main.route('/top_track')
 def top_track():
@@ -120,6 +118,17 @@ def album_single(album_id):
         counter += 1
 
     return render_template('album_single.html', album_single=album_single, artist_single=artist_single, musics=musics, counter=counter)
+
+@main.route('/genres/genres_single/<genre_id>', methods=["GET"])
+def genres_single(genre_id):
+    genre = Genres.query.filter_by(id=genre_id).first()
+
+    musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img)\
+        .join(Author, Author.id == Music.author_id)\
+        .join(Albums, Albums.id == Music.album_id)\
+        .join(Genres, Genres.id == Music.genre_id).filter(Genres.id == genre_id).order_by(func.random()).all()
+    
+    return render_template('genres_single.html', genre=genre, musics=musics)
 
 @main.route('/profile')
 @login_required
