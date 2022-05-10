@@ -25,10 +25,16 @@ def index():
         title = request.form.get('search')
         search = "%{}%".format(title)
 
-        print (title)
-
-        musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name).join(Author, Music.author_id == Author.id)\
-            .filter(or_(Music.music_title.ilike(search), Author.author_name.ilike(search))).all()
+        if current_user.is_authenticated:
+            musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img, 
+            db.session.query(Favourites.id)\
+            .filter(and_(Music.id == Favourites.music_id, Favourites.user_id == current_user.id)).limit(1).label('is_favourite'))\
+            .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id)\
+            .filter(Music.id != None).filter(or_(Music.music_title.ilike(search), Author.author_name.ilike(search))).all()
+        else:
+            musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img)\
+                .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id)\
+                .filter(or_(Music.music_title.ilike(search), Author.author_name.ilike(search))).all()
         return render_template("search.html", musics=musics)
     
     authors = Author.query.all()
