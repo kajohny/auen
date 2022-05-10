@@ -14,7 +14,9 @@
                     <p>Выходные, Карман , Колёса, Москва любит, Не твоё,
                         Ок, ок<br> and many more...</p>
                     <div class="ms_banner_btn">
-                        <a href="#" class="ms_btn">Listen Now</a>
+                        <a href="{{ url_for('main.album_single', album_id=21) }}" class="ms_btn">
+                            Listen Now
+                        </a>
                         <a href="#" class="ms_btn">Add To Queue</a>
                     </div>
                 </div>
@@ -154,13 +156,11 @@
                             <img src="{{ url_for('static', filename=music.album_img) }}" alt="">
                             <div class="ms_song_overlay">
                             </div>
-                            <div class="ms_play_icon">
-                                <!-- <img src="{{ url_for('static', filename='images/svg/play.svg') }}" alt=""> -->
-                                <div class="ms_play_icon" music_source="{{ music.music_source }}"
-                                    artist_name="{{ music.author_name }}" music_title="{{ music.music_title }}"
-                                    album_img="{{ music.album_img }}">
-                                    <img src="{{ url_for('static', filename='images/svg/play.svg') }}" alt="">
-                                </div>
+                            <!-- <img src="{{ url_for('static', filename='images/svg/play.svg') }}" alt=""> -->
+                            <div class="ms_play_icon" music_source="{{ music.music_source }}"
+                                artist_name="{{ music.author_name }}" music_title="{{ music.music_title }}"
+                                album_img="{{ music.album_img }}">
+                                <img src="{{ url_for('static', filename='images/svg/play.svg') }}" alt="">
                             </div>
                         </div>
                         <div class="w_tp_song_name">
