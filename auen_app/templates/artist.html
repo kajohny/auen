@@ -31,9 +31,13 @@
                                     <li><a href="#"><span class="opt_icon"><span
                                                     class="icon icon_share"></span></span>Share</a></li>
                                 </ul>
-                                <div class="ms_play_icon">
-                                    <img src="{{ url_for('static', filename='images/svg/play.svg') }}" alt="">
-                                </div>
+                                <form action="{{ url_for('main.artist_single', artist_id=author.id) }}" method="GET">
+                                    <div class="ms_play_icon">
+                                        <button class="btn" style="background-color:transparent"><img
+                                                src="{{ url_for('static', filename='images/svg/play.svg') }}"
+                                                alt=""></button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                         <div class="ms_rcnt_box_text">
@@ -80,13 +84,17 @@
                                 <li><a href="#"><span class="opt_icon"><span
                                                 class="icon icon_share"></span></span>Share</a></li>
                             </ul>
-                            <div class="ms_play_icon">
-                                <img src="{{ url_for('static', filename='images/svg/play.svg') }}" alt="">
-                            </div>
+                            <form action="{{ url_for('main.artist_single', artist_id=author.id) }}" method="GET">
+                                <div class="ms_play_icon">
+                                    <button class="btn" style="background-color:transparent"><img
+                                            src="{{ url_for('static', filename='images/svg/play.svg') }}"
+                                            alt=""></button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <div class="ms_rcnt_box_text">
-                        <h3><a href="artist_single.html">{{ author.author_name }}</a></h3>
+                        <h3><a href="{{ url_for('main.artist_single,', artist_id=author.id) }}">{{ author.author_name }}</a></h3>
                     </div>
                 </div>
             </div>

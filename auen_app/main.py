@@ -61,24 +61,15 @@ def genre():
 @main.route('/top_track')
 def top_track():
     if current_user.is_authenticated:
-        musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img)\
+        musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img, 
+        db.session.query(Favourites.id)\
+            .filter(and_(Music.id == Favourites.music_id, Favourites.user_id == current_user.id)).limit(1).label('is_favourite'))\
         .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id)\
-        .join(Favourites, and_(Favourites.music_id == Music.id, Favourites.user_id != current_user.id), full=True)\
         .filter(Music.id != None).order_by(func.random()).limit(15).all()
 
     else:
         musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img)\
         .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id).limit(15).all()
-        
-    if request.method == "POST":
-        music_id = request.form.get('music_id')
-
-        favourite = Favourites(user_id=current_user.id, music_id=music_id)
-        
-        db.session.add(favourite)
-        db.session.commit()
-
-        return redirect(url_for('main.index'))
     
     return render_template('top_track.html', musics=musics)
 
