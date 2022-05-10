@@ -173,8 +173,9 @@ def change_password():
 @login_required
 def favourites():
     musics = db.session.query\
-        (Music.id, Music.music_title, Albums.album_title)\
+        (Music.id, Music.music_title, Music.music_source, Albums.album_title, Albums.album_img, Author.author_name)\
         .join(Albums, Albums.id == Music.album_id)\
+        .join(Author, Author.id == Music.author_id)\
         .join(Favourites, and_(Favourites.music_id == Music.id, Favourites.user_id == current_user.id)).all()
     
     if request.method == "POST":
