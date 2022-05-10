@@ -106,8 +106,16 @@ def album_single(album_id):
     album_single = Albums.query.filter_by(id=album_id).first()
     artist_single = db.session.query(Author.author_name).join(Albums, Albums.author_id == Author.id).filter(Albums.id == album_id).first()
 
-    musics = db.session.query(Music.music_title, Author.author_name, Albums.album_title, Albums.album_img).join(Author, Music.author_id == Author.id)\
-        .join(Albums, Albums.id == Music.album_id).filter(Albums.id == album_id).all()
+    if current_user.is_authenticated:
+        musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img, 
+        db.session.query(Favourites.id)\
+        .filter(and_(Music.id == Favourites.music_id, Favourites.user_id == current_user.id)).limit(1).label('is_favourite'))\
+        .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id)\
+        .filter(and_(Music.id != None, Albums.id == album_id)).order_by(func.random()).all()
+    else:
+        musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img)\
+            .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id)\
+            .filter(Albums.id == album_id).all()
 
     counter = 0
 
