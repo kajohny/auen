@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from . import db
+from . import ma
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -8,6 +9,13 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
+
+class UserSchema(ma.Schema) :
+    class Meta:
+        fields = ('id', 'name', 'email', 'password', 'image', 'isartist')   
+
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
 
 class Genres(db.Model):
     __tablename__ = 'genres'

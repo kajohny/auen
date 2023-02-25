@@ -1,9 +1,11 @@
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow   
 
 
 db = SQLAlchemy()
+ma = Marshmallow()
 
 def create_app():
     app = Flask(__name__)
@@ -13,6 +15,7 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
     db.init_app(app)
+    ma.init_app(app)
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
@@ -29,5 +32,8 @@ def create_app():
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
+
+    from .api import api as api_blueprint
+    app.register_blueprint(api_blueprint)
 
     return app
