@@ -4,30 +4,62 @@
 <div class="ms_profile_wrapper">
     <h1>My Profile</h1>
     <div class="ms_profile_box">
-        <div class="ms_pro_img">
-            <img src="{{ url_for('static', filename='images/pfp.png') }}" alt="" class="img-fluid">
-            <div class="pro_img_overlay">
-                <i class="fa_icon edit_icon"></i>
-            </div>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="ms_pro_img">
+                <img src="{{ url_for('static', filename=user.image) }}" alt="" class="img-fluid image" id="pfp_id">
+                <div class="pro_img_overlay">
+                    <label>
+                        <i class="fa_icon edit_icon"></i>
+                        <input class="hidden" type="file" id="upload_img">
+                    </label>
+                </div>
+        </form>
+        <span id="msg" style="color:red"></span>
+    </div>
+    <div class="ms_pro_form">
+        <div class="form-group">
+            <label>Your Name *</label>
+            <input type="text" class="form-control" name="name" value={{ user.name }} readonly>
         </div>
-        <div class="ms_pro_form">
-            <div class="form-group">
-                <label>Your Name *</label>
-                <input type="text" class="form-control" name="name" value={{ name }} readonly>
-            </div>
-            <div class="form-group">
-                <label>Your Email *</label>
-                <input type="text" class="form-control" name="email" value={{ email }} readonly>
-            </div>
-            <div class="pro-form-btn text-center marger_top15">
-                <a href="{{ url_for('main.profile_edit') }}" class="ms_btn">Edit profile</a>
-                <a href="{{ url_for('main.playlist_user') }}" class="ms_btn">Playlists</a>
-                <a href="{{ url_for('main.favourites') }}" class="ms_btn">Your favourites</a>
-                {% if current_user.isartist %} 
-                <a href="{{ url_for('main.upload') }}" class="ms_btn">Upload your track</a>
-                {% endif %}
-            </div>
+        <div class="form-group">
+            <label>Your Email *</label>
+            <input type="text" class="form-control" name="email" value={{ user.email }} readonly>
+        </div>
+        <div class="pro-form-btn text-center marger_top15">
+            <a href="{{ url_for('main.profile_edit') }}" class="ms_btn">Edit profile</a>
+            <a href="{{ url_for('main.playlist_user') }}" class="ms_btn">Playlists</a>
+            <a href="{{ url_for('main.favourites') }}" class="ms_btn">Your favourites</a>
+            {% if current_user.isartist %} 
+            <a href="{{ url_for('main.upload') }}" class="ms_btn">Upload your track</a>
+            {% endif %}
         </div>
     </div>
 </div>
+</div>
+<script>
+    $(document).on('change', '#upload_img', function () {
+        var property = document.getElementById('upload_img').files[0];
+        var image_name = property.name;
+        var image_extension = image_name.split('.').pop().toLowerCase();
+        var url = '/edit_pfp';
+        var form_data = new FormData();
+        form_data.append("file", property);
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            beforeSend: function () {
+                $('#msg').html('Loading......');
+            },
+            success: function (data) {
+                console.log(image_name)
+                $('.image').attr('src', 'static/images/pfp/' + image_name);
+                $('#msg').html('')
+            }
+        });
+    });
+</script>
 {% endblock %}
