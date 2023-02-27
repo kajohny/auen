@@ -23,6 +23,9 @@
                 <a href="{{ url_for('main.profile_edit') }}" class="ms_btn">Edit profile</a>
                 <a href="{{ url_for('main.playlist_user') }}" class="ms_btn">Playlists</a>
                 <a href="{{ url_for('main.favourites') }}" class="ms_btn">Your favourites</a>
+                {% if current_user.isartist %} 
+                <a href="{{ url_for('main.upload') }}" class="ms_btn">Upload your track</a>
+                {% endif %}
             </div>
         </div>
     </div>
