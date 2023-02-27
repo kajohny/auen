@@ -3,7 +3,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, login_user, logout_user
 from .models import User
 from . import db
-import re
 
 auth = Blueprint('auth', __name__)
 
@@ -32,23 +31,26 @@ def registration():
         name = request.form.get('name')
         password = request.form.get('password')
         password_confirm = request.form.get('password_confirm')
+        isartist = request.form.get('isartist')
+        image = "/images/pfp/pfp_standard.jpg"
 
+        if isartist == "artist":
+            isartist = True
+        else:
+            isartist = False
+    
         user = User.query.filter_by(email=email).first()
         if user:
             flash('Email address already exists')
             return redirect(url_for('auth.login'))
-
-        if not email or not name or not password:
-            flash('Please fill all the required fields')
-        elif not re.fullmatch(r'[A-Za-z0-9@#$%^&+=]{8,}', password):
-            flash('Password is not valid')
-        elif password != password_confirm:
-            flash('Passwords do not match')
         else:
-            reg_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'))
-            db.session.add(reg_user)
-            db.session.commit()
-            return redirect(url_for('auth.login'))
+            if password != password_confirm:
+                flash('Passwords do not match')
+            else:
+                reg_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'), image=image, isartist=isartist)
+                db.session.add(reg_user)
+                db.session.commit()
+                return redirect(url_for('auth.login'))
     return render_template('registration.html')
 
 @auth.route('/logout')
