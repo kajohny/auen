@@ -37,3 +37,8 @@ def registration():
             db.session.add(reg_user)
             db.session.commit()
             print("success")
+
+@api.route('/profile/api/<email>', methods=["GET"])
+def profile(email):
+    user = User.query.filter_by(email = email).first()
+    return user_schema.jsonify(user)
