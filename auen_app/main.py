@@ -84,14 +84,14 @@ def top_track():
 def artist_single(artist_id):
     author_single = Author.query.filter_by(id=artist_id).first()
 
-    if current_user.is_authenticated:
-        musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img, 
-        db.session.query(Favourites.id)\
-        .filter(and_(Music.id == Favourites.music_id, Favourites.user_id == current_user.id)).limit(1).label('is_favourite'))\
-        .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id)\
-        .filter(and_(Music.id != None, Author.id == artist_id)).order_by(func.random()).all()
-    else:
-        musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img)\
+    # if current_user.is_authenticated:
+    #     musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img, 
+    #     db.session.query(Favourites.id)\
+    #     .filter(and_(Music.id == Favourites.music_id, Favourites.user_id == current_user.id)).limit(1).label('is_favourite'))\
+    #     .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id)\
+    #     .filter(and_(Music.id != None, Author.id == artist_id)).order_by(func.random()).all()
+    # else:
+    musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img)\
             .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id)\
             .filter(Author.id == artist_id).all()
 
