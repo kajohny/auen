@@ -300,7 +300,7 @@ def edit_pfp():
             file.save(os.path.join("auen/auen_app/static/images/pfp", file.filename))
             image = Image.open('auen/auen_app/static/images/pfp/' + file.filename)
             new_image = image.resize((360, 360))
-            new_image.save(os.path.join("auen_app/static/images/pfp", file.filename))
+            new_image.save(os.path.join("auen/auen_app/static/images/pfp", file.filename))
             user = User.query.filter_by(id = current_user.id).first()
             user.image = "/images/pfp/" + file.filename
             db.session.commit()
