@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import func, and_, or_
-from .models import User, UserSchema, user_schema
+from .models import User, UserSchema, user_schema, Music, Author, Albums, musics_schema
 from . import db
 
 api = Blueprint('api', __name__)
@@ -42,3 +42,27 @@ def registration():
 def profile(email):
     user = User.query.filter_by(email = email).first()
     return user_schema.jsonify(user)
+
+@api.route('/music/api/', methods=["GET"])
+def music():
+    musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img)\
+        .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id).all()
+    
+    musics_list = []
+    
+    for music in musics:
+        musics_list.append(music)
+
+    return musics_schema.jsonify(musics_list)
+
+@api.route('/music_available/api/', methods=["GET"])
+def music_available():
+    musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img)\
+        .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id).filter(Music.music_source.ilike("music%")).all()
+    
+    musics_list = []
+    
+    for music in musics:
+        musics_list.append(music)
+
+    return musics_schema.jsonify(musics_list)

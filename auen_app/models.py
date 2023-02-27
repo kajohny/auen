@@ -76,6 +76,13 @@ class Audios(db.Model):
     artist_id = db.Column(db.Integer, db.ForeignKey('author.id'))
     album_id = db.Column(db.Integer, db.ForeignKey('albums.id'))
 
+class MusicSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'title', 'music_source', 'author_name', 'album_img')
+
+music_schema = MusicSchema()
+musics_schema = MusicSchema(many=True)
+
 
 
 
