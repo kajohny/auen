@@ -34,6 +34,11 @@
 30.Blog Single Page Css / .ms_blog_single_wrapper
 31.Sidebar Css / .ms_sidebar
 -------------------------------------------------------------------*/
+
+.hidden {
+	display: none;
+}
+
 body {
 	margin: 0;
 	font-family: 'Josefin Sans', sans-serif;
