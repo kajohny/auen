@@ -5,6 +5,7 @@ from sqlalchemy.sql import func, and_, or_
 from .models import User, Music, Author, Favourites, Albums, Genres, Playlists, Audios
 from . import db
 import os
+from PIL import Image
 
 main = Blueprint('main', __name__)
 
@@ -296,7 +297,10 @@ def edit_pfp():
         file = request.files['file']
         
         if file and allowed_file(file.filename):
-            file.save(os.path.join("auen/auen_app/static/images/pfp", file.filename))
+            file.save(os.path.join("auen_app/static/images/pfp", file.filename))
+            image = Image.open('auen_app/static/images/pfp/' + file.filename)
+            new_image = image.resize((360, 360))
+            new_image.save(os.path.join("auen_app/static/images/pfp", file.filename))
             user = User.query.filter_by(id = current_user.id).first()
             user.image = "/images/pfp/" + file.filename
             db.session.commit()
