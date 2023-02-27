@@ -296,7 +296,7 @@ def edit_pfp():
         file = request.files['file']
         
         if file and allowed_file(file.filename):
-            file.save(os.path.join("auen_app/static/images/pfp", file.filename))
+            file.save(os.path.join("kajohny/auen/auen_app/static/images/pfp", file.filename))
             user = User.query.filter_by(id = current_user.id).first()
             user.image = "/images/pfp/" + file.filename
             db.session.commit()
