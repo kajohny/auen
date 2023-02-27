@@ -15,7 +15,6 @@ def create_app():
     app.config['SECRET_KEY'] = 's3cr3tk3y'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://kajohny:rootmysql@kajohny.mysql.pythonanywhere-services.com/kajohny$auen'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-    app.config['JSON_AS_ASCII'] = False
 
     db.init_app(app)
     migrate.init_app(app, db)  
