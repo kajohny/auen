@@ -3,8 +3,9 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import func, and_, or_
-from .models import User, Music, Author, Favourites, Albums, Genres, Playlists
+from .models import User, Music, Author, Favourites, Albums, Genres, Playlists, Audios
 from . import db
+import os
 
 main = Blueprint('main', __name__)
 
@@ -43,7 +44,9 @@ def index():
 
     genres = Genres.query.all()
 
-    return render_template('index.html', musics=musics, authors=authors, albums=albums, genres=genres)
+    artists = User.query.filter_by(isartist=True).all()
+
+    return render_template('index.html', musics=musics, authors=authors, albums=albums, genres=genres, artists=artists)
 
 @main.route('/album')
 def album():
@@ -257,3 +260,46 @@ def create_playlist():
 
         return redirect(url_for('main.playlist_user'))
     return render_template('create_playlist.html')
+
+@main.route('/profile/upload', methods=["GET", "POST"])
+@login_required
+def upload():
+    if request.method == "POST":
+        file = request.files['file']
+        title = request.form.get('title')
+        file.save(os.path.join("auen_app/static/audio", file.filename))
+
+        add_audio = Audios(title = title, source="/static/audio/" + file.filename, artist_id=current_user.id)
+        db.session.add(add_audio)
+        db.session.commit()
+        return render_template('upload.html')
+    return render_template('upload.html')
+
+@main.route('/artists/<artist_id>', methods=["GET"])
+def single_artist(artist_id):
+    artist_single = User.query.filter_by(id=artist_id).first()
+
+    audios = db.session.query(Audios.title, Audios.source, User.name).join(User, Audios.artist_id == User.id).filter(User.id == artist_id).all()
+
+    return render_template('artist_page.html', artist_single=artist_single, audios=audios)
+
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@main.route('/edit_pfp', methods=["GET", "POST"])
+@login_required
+def edit_pfp():
+    if request.method == "POST":
+        file = request.files['file']
+        
+        if file and allowed_file(file.filename):
+            file.save(os.path.join("auen_app/static/images/pfp", file.filename))
+            user = User.query.filter_by(id = current_user.id).first()
+            user.image = "/images/pfp/" + file.filename
+            db.session.commit()
+            return render_template("profile.html", user=user)
+        else:
+            return redirect(url_for('main.profile'))

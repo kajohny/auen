@@ -9,6 +9,8 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
+    image = db.Column(db.String(100))
+    isartist = db.Column(db.Boolean, default=False)
 
 class UserSchema(ma.Schema) :
     class Meta:
@@ -64,6 +66,15 @@ class Playlists(db.Model):
     playlist_name = db.Column(db.String(255))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     music_id = db.Column(db.Integer, db.ForeignKey('music.id'))
+
+class Audios(db.Model):
+    __tablename__ = 'audios'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255))
+    source = db.Column(db.String(255))
+    genre_id = db.Column(db.Integer, db.ForeignKey('genres.id'))
+    artist_id = db.Column(db.Integer, db.ForeignKey('author.id'))
+    album_id = db.Column(db.Integer, db.ForeignKey('albums.id'))
 
 
 

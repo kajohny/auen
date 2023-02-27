@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <!---Banner--->
-<div class="ms-banner">
+<!-- <div class="ms-banner">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12 col-md-12">
@@ -23,7 +23,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <!---Weekly Top 15--->
 <div class="ms_weekly_wrapper">
     <div class="ms_weekly_inner">
@@ -118,6 +118,44 @@
                     </div>
                     <div class="ms_rcnt_box_text">
                         <h3><a href="#">{{ author.author_name }}</a></h3>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="swiper-button-next1 slider_nav_next"></div>
+    <div class="swiper-button-prev1 slider_nav_prev"></div>
+</div>
+<!---Artists Music--->
+<div class="ms_featured_slider">
+    <div class="ms_heading">
+        <h1>Independent Artists</h1>
+        <span class="veiw_all"><a href="#">view more</a></span>
+    </div>
+    <div class="ms_feature_slider swiper-container">
+        <div class="swiper-wrapper">
+            {% for artist in artists %}
+            <div class="swiper-slide">
+                <div class="ms_rcnt_box">
+                    <div class="ms_rcnt_box_img">
+                        <img src="{{ url_for('static', filename=artist.image) }}" alt="">
+                        <div class="ms_main_overlay">
+                            <div class="ms_box_overlay"></div>
+                            <div class="ms_more_icon">
+                                <img src="{{ url_for('static', filename='images/svg/more.svg') }}" alt="">
+                            </div>
+                            <form action="{{ url_for('main.single_artist', artist_id=artist.id) }}" method="GET+">
+                                <div class="ms_play_icon">
+                                    <button class="btn" style="background-color:transparent"><img
+                                            src="{{ url_for('static', filename='images/svg/play.svg') }}"
+                                            alt=""></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="ms_rcnt_box_text">
+                        <h3><a href="#">{{ artist.name }}</a></h3>
                     </div>
                 </div>
             </div>
