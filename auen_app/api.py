@@ -47,16 +47,5 @@ def profile(email):
 def music():
     musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img)\
         .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id).all()
-    
-    musics_list = []
-    
-    for music in musics:
-        musics_list.append(music)   
-    
-    musics_list = [tuple(row) for row in musics_list]
 
-    json_string = json.dumps((musics_list), ensure_ascii=False)
-
-    response = Response(json_string,content_type="application/json; charset=utf-8" )
-    
-    return response
+    return musics_schema.jsonify(musics)
