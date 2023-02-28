@@ -64,7 +64,7 @@ def music():
 @api.route('/music_available/api/', methods=["GET"])
 def music_available():
     musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img)\
-        .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id).filter(Music.music_source.ilike("https%")).all()
+        .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id).filter(Music.music_source.ilike("music%")).all()
     
     musics_list = []
     
