@@ -78,7 +78,7 @@ class Audios(db.Model):
 
 class MusicSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'title', 'music_source', 'author_name', 'album_img')
+        fields = ('id', 'music_title', 'music_source', 'author_name', 'album_img')
 
 music_schema = MusicSchema()
 musics_schema = MusicSchema(many=True)
