@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import func, and_, or_
-from .models import User, UserSchema, user_schema, Music, Author, Albums, musics_schema
+from .models import User, Music, Author, Albums, Favourites, musics_schema, user_schema
 from . import db
 
 api = Blueprint('api', __name__)
@@ -47,5 +47,14 @@ def profile(email):
 def music():
     musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img)\
         .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id).all()
+
+    return musics_schema.jsonify(musics)
+
+@api.route('/favourites/api/<id>', methods=["GET"])
+def favourites(id):
+    musics = db.session.query\
+        (Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img)\
+        .join(Albums, Albums.id == Music.album_id).join(Author, Music.author_id == Author.id)\
+        .join(Favourites, and_(Favourites.music_id == Music.id, Favourites.user_id == id)).all()
 
     return musics_schema.jsonify(musics)
