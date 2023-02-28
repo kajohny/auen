@@ -60,21 +60,3 @@ def music():
     response = Response(json_string,content_type="application/json; charset=utf-8" )
     
     return response
-
-@api.route('/music_available/api/', methods=["GET"])
-def music_available():
-    musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img)\
-        .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id).filter(Music.music_source.ilike("music%")).all()
-    
-    musics_list = []
-    
-    for music in musics:
-        musics_list.append(music)   
-    
-    musics_list = [tuple(row) for row in musics_list]
-
-    json_string = json.dumps((musics_list), ensure_ascii=False)
-
-    response = Response(json_string,content_type="application/json; charset=utf-8" )
-    
-    return response
