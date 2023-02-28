@@ -268,7 +268,7 @@ def upload():
     if request.method == "POST":
         file = request.files['file']
         title = request.form.get('title')
-        file.save(os.path.join("auen_app/static/audio", file.filename))
+        file.save(os.path.join("auen/auen_app/static/audio", file.filename))
 
         add_audio = Audios(title = title, source="/static/audio/" + file.filename, artist_id=current_user.id)
         db.session.add(add_audio)
