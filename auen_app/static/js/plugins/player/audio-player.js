@@ -247,7 +247,6 @@ $(function () {
 
         });
         $('.ms_play_icon').click(function () {
-            myPlaylist.remove()
             let id = $(this).attr('music_id');
             let musics = $(this).attr('musics');
             let array = musics.replace(/\)\,/g, ' ').replace(/[[\]]/g, "").replace(/[()']/g, "").split("  ");
