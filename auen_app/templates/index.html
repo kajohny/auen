@@ -45,7 +45,7 @@
                                 <img src="{{ url_for('static', filename=music.album_img) }}" alt="" class="img-fluid">
                                 <div class="ms_song_overlay">
                                 </div>
-                                <div class="ms_play_icon" music_source="{{ music.music_source }}"
+                                <div class="ms_play_icon" music_source="{{ music.music_source }}" musics = "{{ musics }}" music_id = "{{ music.id }}"
                                     artist_name="{{ music.author_name }}" music_title="{{ music.music_title }}"
                                     album_img="{{ music.album_img }}">
                                     <img src="{{ url_for('static', filename='images/svg/play.svg') }}" alt="">
