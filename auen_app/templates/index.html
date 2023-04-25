@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <!---Banner--->
-<div class="ms-banner">
+<!-- <div class="ms-banner">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12 col-md-12">
@@ -11,6 +11,29 @@
                 <div class="ms_banner_text">
                     <h1>This Month’s</h1>
                     <h1 class="ms_color">Record Breaking Albums !</h1>
+                    <p>Выходные, Карман , Колёса, Москва любит, Не твоё,
+                        Ок, ок<br> and many more...</p>
+                    <div class="ms_banner_btn">
+                        <a href="{{ url_for('main.album_single', album_id=21) }}" class="ms_btn">
+                            Listen Now
+                        </a>
+                        <a href="#" class="ms_btn">Add To Queue</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<div class="ms-banner">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="ms_banner_img">
+                    <img src="{{ url_for('static', filename='images/2004.jpg') }}" alt="" class="img-fluid">
+                </div>
+                <div class="ms_banner_text">
+                    <h1>This Month’s</h1>
+                    <h1 class="ms_color">Record Breaking daskdjsadkasIDSAIDHASI !</h1>
                     <p>Выходные, Карман , Колёса, Москва любит, Не твоё,
                         Ок, ок<br> and many more...</p>
                     <div class="ms_banner_btn">
