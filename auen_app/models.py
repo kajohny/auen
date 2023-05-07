@@ -67,6 +67,13 @@ class Playlists(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     music_id = db.Column(db.Integer, db.ForeignKey('music.id'))
 
+class PlaylistMusic(db.Model):
+    __tablename__ = 'playlist_music'
+    __table_args__ = {'extend_existing':True}
+    id = db.Column(db.Integer, primary_key=True)
+    playlist_id = db.Column(db.Integer, db.ForeignKey('playlists.id'))
+    music_id = db.Column(db.Integer, db.ForeignKey('music.id'))
+
 class Audios(db.Model):
     __tablename__ = 'audios'
     id = db.Column(db.Integer, primary_key=True)
@@ -83,8 +90,16 @@ class MusicSchema(ma.Schema):
 music_schema = MusicSchema()
 musics_schema = MusicSchema(many=True)
 
+class PlaylistSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'playlist_name')
 
+playlist_schema = PlaylistSchema(many=True)
 
+class AlbumSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'album_title', 'album_img', 'author_name')
 
-
+album_schema = AlbumSchema()
+albums_schema = AlbumSchema(many=True)
 

@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import func, and_, or_
-from .models import User, Music, Author, Favourites, Albums, Genres, Playlists, Audios
+from .models import User, Music, Author, Favourites, Albums, Genres, Playlists, Audios, PlaylistMusic
 from . import db
 import os
 from PIL import Image
@@ -234,19 +234,17 @@ def remove_favourites():
 @login_required
 def playlist_user():
     favourites = Favourites.query.filter_by(user_id=current_user.id).all()
-    playlists = Playlists.query.filter_by(user_id=current_user.id).all()
 
-    playlists_count = Playlists.query.filter(Playlists.music_id != None).filter_by(user_id=current_user.id).all()
+    playlists = db.session.query(Playlists.playlist_name, Playlists.id, PlaylistMusic.playlist_id, func.count(PlaylistMusic.playlist_id).label('counter'))\
+        .join(PlaylistMusic, PlaylistMusic.playlist_id == Playlists.id)\
+        .filter(Playlists.user_id == current_user.id).group_by(Playlists.id, PlaylistMusic.playlist_id, Playlists.playlist_name)
+    
     counter_f = 0
-    counter_p = 0
 
     for favourite in favourites:
         counter_f += 1
     
-    for playlist in playlists_count:
-        counter_p += 1
-    
-    return render_template('add_playlist.html', playlists=playlists, counter_f=counter_f, counter_p=counter_p)
+    return render_template('add_playlist.html', playlists=playlists, counter_f=counter_f)
 
 @main.route('/profile/create_playlist', methods=['GET', 'POST'])
 @login_required
@@ -261,6 +259,52 @@ def create_playlist():
 
         return redirect(url_for('main.playlist_user'))
     return render_template('create_playlist.html')
+
+@main.route('/profile/playlist_user/<playlist_id>', methods=["GET", "POST"])
+@login_required
+def playlist_music(playlist_id):
+    playlist_single = Playlists.query.filter_by(id = playlist_id).first()
+
+    musics = db.session.query(Music.id, Music.music_title, Music.music_source, Albums.album_title, Albums.album_img)\
+        .join(Albums, Albums.id == Music.album_id).join(PlaylistMusic, PlaylistMusic.music_id == Music.id)\
+        .filter(PlaylistMusic.playlist_id == playlist_id)
+    
+    # musics_playlist = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img)\
+    #     .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id)\
+    #     .filter(Music.id != None).order_by(func.random()).limit(15).all()
+    
+    musics_playlist = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img, 
+        db.session.query(PlaylistMusic.id)\
+            .filter(and_(Music.id == PlaylistMusic.music_id, PlaylistMusic.playlist_id == playlist_id)).limit(1).label('is_playlist'))\
+        .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id)\
+        .filter(Music.id != None).limit(15).all()
+    
+    return render_template('playlist_music.html', playlist_single=playlist_single, musics=musics, musics_playlist=musics_playlist)
+
+@main.route("/playlist/add", methods=["POST"])
+@login_required
+def add_playlist():
+    music_id = request.form.get('music_id')
+    playlist_id = request.form.get('playlist_id')
+
+    playlist = PlaylistMusic(playlist_id=playlist_id, music_id=music_id)
+        
+    db.session.add(playlist)
+    db.session.commit()
+
+    return "added"
+
+@main.route("/playlist/remove", methods=["POST"])
+@login_required
+def remove_playlist():
+    music_id = request.form.get('music_id')
+    playlist_id = request.form.get('playlist_id')
+    playlist = PlaylistMusic.query.filter_by(music_id=music_id, playlist_id=playlist_id).first()
+
+    db.session.delete(playlist)
+    db.session.commit()
+
+    return "removed"
 
 @main.route('/profile/upload', methods=["GET", "POST"])
 @login_required

@@ -29,18 +29,22 @@
             {% for playlist in playlists %}
             <div class="col-lg-2 col-md-6">
                 <div class="ms_rcnt_box marger_bottom25">
-                    <div class="ms_rcnt_box_img">
-                        <img src="{{ url_for('static', filename='images/myplaylist.jpg') }}" alt="" class="img-fluid">
-                        <div class="ms_main_overlay">
-                            <div class="ms_box_overlay"></div>
-                            <div class="ms_play_icon">
-                                <img src="{{ url_for('static', filename='images/svg/play.svg') }}" alt="">
+                    <form action="{{ url_for('main.playlist_music', playlist_id=playlist.id) }}" methodd="GET">
+                        <div class="ms_rcnt_box_img">
+                            <img src="{{ url_for('static', filename='images/myplaylist.jpg') }}" alt=""
+                                class="img-fluid">
+                            <div class="ms_main_overlay">
+                                <div class="ms_box_overlay"></div>
+                                <div class="ms_play_icon">
+                                    <button class="btn" style="background-color:transparent"><img src="{{ url_for('static', filename='images/svg/play.svg') }}"
+                                            alt=""></button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                     <div class="ms_rcnt_box_text">
                         <h3><a href="#">{{ playlist.playlist_name }}</a></h3>
-                        <p>{{ counter_p }} songs</p>
+                        <p>{{ playlist.counter }} songs</p>
                     </div>
                 </div>
             </div>
@@ -48,7 +52,7 @@
             <div class="col-lg-2">
                 <div class="ms_rcnt_box marger_bottom25">
                     <div class="create_playlist">
-                       <a href="{{ url_for('main.create_playlist') }}"><i class="ms_icon icon_playlist"></i></a> 
+                        <a href="{{ url_for('main.create_playlist') }}"><i class="ms_icon icon_playlist"></i></a>
                     </div>
                     <div class="ms_rcnt_box_text">
                         <h3><a href="{{ url_for('main.create_playlist') }}">Create New Playlist</a></h3>
