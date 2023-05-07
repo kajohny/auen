@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import func, and_, or_
-from .models import User, Music, Author, Albums, Favourites, PlaylistMusic, musics_schema, user_schema, playlist_schema, albums_schema 
+from .models import User, Music, Author, Albums, Favourites, Playlists, PlaylistMusic, musics_schema, user_schema, playlist_schema, albums_schema 
 from . import db
 
 api = Blueprint('api', __name__)
