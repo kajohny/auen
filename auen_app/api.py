@@ -28,15 +28,27 @@ def registration():
         name = request.form['name']
         password = request.form['password']
         password_confirm = request.form['password_confirm']
+        isartist = request.form['isartist']
+        image = "/images/pfp/pfp_standard.jpg"
+
+        if isartist == "artist":
+            isartist = True
+        else:
+            isartist = False
 
         user = User.query.filter_by(email=email).first()
         if user:
             print("Email already exists")
         else:
-            reg_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'))
-            db.session.add(reg_user)
-            db.session.commit()
-            print("success")
+            if password != password_confirm:
+                return jsonify(['passwords do not match'])
+            else:
+                reg_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'), image=image, isartist=isartist)
+                db.session.add(reg_user)
+                db.session.commit()
+                return jsonify(['success'])
+    return jsonify(['registration'])
+
 
 @api.route('/profile/api/<email>', methods=["GET"])
 def profile(email):
