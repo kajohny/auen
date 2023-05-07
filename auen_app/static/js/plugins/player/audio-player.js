@@ -255,7 +255,6 @@ $(function () {
             for (let i = 0; i <= array.length; i++) {
                 counter++;
                 if(array[i].indexOf(id) != -1) {
-                    console.log(array[i])
                     break;
                 }
             }
@@ -268,7 +267,7 @@ $(function () {
                     mp3: a[2]
                 }, true);
                 myPlaylist.current = counter - 1;
-                console.log(a)
+                myPlaylist.play(myPlaylist.current)
             }
         })
         $('.clear_all').click(function() {
