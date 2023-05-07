@@ -29,7 +29,7 @@
             {% for playlist in playlists %}
             <div class="col-lg-2 col-md-6">
                 <div class="ms_rcnt_box marger_bottom25">
-                    <form action="{{ url_for('main.playlist_music', playlist_id=playlist.id) }}" methodd="GET">
+                    <form action="{{ url_for('main.playlist_music', playlist_id=playlist.id) }}" method="GET">
                         <div class="ms_rcnt_box_img">
                             <img src="{{ url_for('static', filename='images/myplaylist.jpg') }}" alt=""
                                 class="img-fluid">
