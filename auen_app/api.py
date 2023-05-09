@@ -55,7 +55,7 @@ def profile(email):
     user = User.query.filter_by(email = email).first()
     return user_schema.jsonify(user)
 
-@api.route('/music/api/', methods=["GET"])
+@api.route('/music/api', methods=["GET"])
 def music():
     musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img)\
         .join(Author, Music.author_id == Author.id).join(Albums, Albums.id == Music.album_id).all()
@@ -126,7 +126,7 @@ def create_playlist(id):
         return jsonify(['success'])
     return jsonify(['create playlist'])
 
-@api.route('/playlist_add/api/', methods=["POST"])
+@api.route('/playlist_add/api', methods=["POST"])
 def playlist_add():
     if request.method == "POST":
         music_id = request.form['music_id']
@@ -140,7 +140,7 @@ def playlist_add():
         return jsonify(['success'])
     return jsonify(['add to playlist'])
 
-@api.route('/playlist_remove/api/', methods=["POST"])
+@api.route('/playlist_remove/api', methods=["POST"])
 def playlist_remove():
     if request.method == "POST":
         music_id = request.form['music_id']
