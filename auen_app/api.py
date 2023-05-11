@@ -107,10 +107,11 @@ def playlist_user(id):
 
 @api.route('/playlist_songs/api/<playlist_id>', methods=["GET"])
 def playlist_songs(playlist_id):
-    musics = db.session.query(Music.id, Music.music_title, Music.music_source, Albums.album_title, Albums.album_img)\
+    musics = db.session.query(Music.id, Music.music_title, Music.music_source, Author.author_name, Albums.album_img)\
+        .join(Author, Music.author_id == Author.id)\
         .join(Albums, Albums.id == Music.album_id).join(PlaylistMusic, PlaylistMusic.music_id == Music.id)\
         .filter(PlaylistMusic.playlist_id == playlist_id)
-    
+        
     return musics_schema.jsonify(musics)
 
 @api.route('/create_playlist/api/<id>', methods=["POST"])
