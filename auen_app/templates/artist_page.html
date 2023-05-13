@@ -48,8 +48,9 @@
             {% for audio in audios %}
             <ul>
                 <li><a href="#"><span class="play_no">{{ loop.index }}</span><span class="play_hover ms_play_icon"
-                            music_source="{{ audio.source }}" artist_name="{{ audio.name }}"
-                            music_title="{{ audio.title }}" album_img="/static/images/blank.jpg"></span></a></li>
+                            musics="{{ audios }}" music_source="{{ audio.source }}" artist_name="{{ audio.name }}"
+                            music_id="{{ audio.id }}" music_title="{{ audio.title }}"
+                            album_img="/static/images/blank.jpg"></span></a></li>
                 <li><a href="#">{{ audio.title}}</a></li>
                 <li><a href="#">{{ audio.name }}</a></li>
                 <li class="text-center"><a href="#">5:26</a></li>
