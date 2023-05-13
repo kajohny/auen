@@ -261,16 +261,16 @@ $(function () {
             }
             for (let i = 0; i <= array.length; i++) {
                 a = array[i].split(", ");
-                myPlaylist.add({
+                playlist.push({
                     image: a[4],
                     title: a[1],
                     artist: a[3],
                     mp3: a[2]
-                }, true);
+                });
+                myPlaylist.setPlaylist(playlist);
                 myPlaylist.current = counter - 1;
-                myPlaylist.play(myPlaylist.current)
-            }
-
+                myPlaylist.play(myPlaylist.current);
+            };
         })
         $('.clear_all').click(function () {
             myPlaylist.remove();
