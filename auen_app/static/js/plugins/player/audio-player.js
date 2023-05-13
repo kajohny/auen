@@ -259,30 +259,17 @@ $(function () {
                     break;
                 }
             }
-            // for (let i = 0; i <= array.length; i++) {
-            //     a = array[i].split(", ");
-            //     myPlaylist.add({
-            //         image: a[4],
-            //         title: a[1],
-            //         artist: a[3],
-            //         mp3: a[2]
-            //     }, true);
-            //     myPlaylist.current = counter - 1;
-            //     myPlaylist.play(myPlaylist.current)
-            // }
-
             for (let i = 0; i <= array.length; i++) {
                 a = array[i].split(", ");
-                playlist.push({
+                myPlaylist.add({
                     image: a[4],
                     title: a[1],
                     artist: a[3],
                     mp3: a[2]
-                });
-                myPlaylist.setPlaylist(playlist);
+                }, true);
                 myPlaylist.current = counter - 1;
-                myPlaylist.play(myPlaylist.current);
-            };
+                myPlaylist.play(myPlaylist.current)
+            }
 
         })
         $('.clear_all').click(function () {
