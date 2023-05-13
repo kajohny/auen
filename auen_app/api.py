@@ -2,8 +2,10 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import func, and_, or_
-from .models import User, Music, Author, Albums, Favourites, Playlists, PlaylistMusic, musics_schema, user_schema, playlist_schema, albums_schema 
+from .models import User, Music, Author, Albums, Favourites, Playlists, PlaylistMusic, Releases, Audios,\
+    musics_schema, user_schema, playlist_schema, albums_schema 
 from . import db
+import os
 
 api = Blueprint('api', __name__)
 
@@ -168,3 +170,35 @@ def album_songs(album_id):
             .filter(Albums.id == album_id).all()
 
     return musics_schema.jsonify(musics)
+
+@api.route('/upload/api/<artist_id>', methods=["POST"])
+def upload(artist_id):
+    if request.method == "POST":
+        files = request.files.getlist('file')
+        titles = request.form.getlist('title')
+        
+        if(len(files) > 1):
+            album_title = request.form.get('album_title')
+        else:
+            album_title = request.form.get('title')
+
+        img_file = request.files['img-file']
+
+        if img_file.filename:
+            img_file.save(os.path.join("auen_app/static/images/album", img_file.filename))
+            release = Releases(album_title = album_title, album_img = 'images/album/' + img_file.filename, author_id=artist_id)
+        else:
+            release = Releases(album_title = album_title, album_img = 'images/album/images.jfif', author_id=artist_id)
+        db.session.add(release)
+        db.session.commit()
+
+        release = Releases.query.filter_by(album_title=album_title).first()
+        
+        for i in range(len(files)):
+            files[i].save(os.path.join("auen_app/static/audio", files[i].filename))
+            add_audio = Audios(title = titles[i], source="/static/audio/" + files[i].filename, album_id = release.id, artist_id = artist_id)
+            db.session.add(add_audio)
+            db.session.commit()
+
+        return jsonify(['success'])
+    return jsonify(['upload'])
