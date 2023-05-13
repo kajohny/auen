@@ -6,6 +6,7 @@ from .models import User, Music, Author, Albums, Favourites, Playlists, Playlist
     musics_schema, user_schema, playlist_schema, albums_schema 
 from . import db
 import os
+import re
 
 api = Blueprint('api', __name__)
 
@@ -195,8 +196,9 @@ def upload(artist_id):
         release = Releases.query.filter_by(album_title=album_title).first()
         
         for i in range(len(files)):
-            files[i].save(os.path.join("auen_app/static/audio", files[i].filename))
-            add_audio = Audios(title = titles[i], source="/static/audio/" + files[i].filename, album_id = release.id, artist_id = artist_id)
+            fixedFilename = re.sub('[^A-Za-z0-9.]+', '', files[i].filename)
+            files[i].save(os.path.join("auen_app/static/audio", fixedFilename))
+            add_audio = Audios(title = titles[i], source="/static/audio/" + fixedFilename, album_id = release.id, artist_id = artist_id)
             db.session.add(add_audio)
             db.session.commit()
 

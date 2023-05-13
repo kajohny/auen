@@ -81,7 +81,7 @@ class Audios(db.Model):
     source = db.Column(db.String(255))
     genre_id = db.Column(db.Integer, db.ForeignKey('genres.id'))
     artist_id = db.Column(db.Integer, db.ForeignKey('author.id'))
-    album_id = db.Column(db.Integer, db.ForeignKey('albums.id'))
+    album_id = db.Column(db.Integer, db.ForeignKey('releases.id'))
 
 class MusicSchema(ma.Schema):
     class Meta:
