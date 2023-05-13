@@ -141,8 +141,7 @@ $(function () {
         var myPlaylist = new jPlayerPlaylist({
             jPlayer: "#jquery_jplayer_1",
             cssSelectorAncestor: "#jp_container_1"
-        }, [], 
-        {
+        }, [], {
             swfPath: "js/plugins",
             supplied: "oga, mp3",
             wmode: "window",
@@ -250,28 +249,44 @@ $(function () {
             let id = $(this).attr('music_id');
             let musics = $(this).attr('musics');
             let array = musics.replace(/\)\,/g, ' ').replace(/[[\]]/g, "").replace(/[()']/g, "").split("  ");
-            let a = []
-            let counter = 0
+            let a = [];
+            let playlist = [];
+            let counter = 0;
+
             for (let i = 0; i <= array.length; i++) {
                 counter++;
-                if(array[i].indexOf(id) != -1) {
+                if (array[i].indexOf(id) != -1) {
                     break;
                 }
             }
+            // for (let i = 0; i <= array.length; i++) {
+            //     a = array[i].split(", ");
+            //     myPlaylist.add({
+            //         image: a[4],
+            //         title: a[1],
+            //         artist: a[3],
+            //         mp3: a[2]
+            //     }, true);
+            //     myPlaylist.current = counter - 1;
+            //     myPlaylist.play(myPlaylist.current)
+            // }
+
             for (let i = 0; i <= array.length; i++) {
                 a = array[i].split(", ");
-                myPlaylist.add({
+                playlist.push({
                     image: a[4],
                     title: a[1],
                     artist: a[3],
                     mp3: a[2]
-                }, true);
+                });
+                myPlaylist.setPlaylist(playlist);
                 myPlaylist.current = counter - 1;
-                myPlaylist.play(myPlaylist.current)
-            }
+                myPlaylist.play(myPlaylist.current);
+            };
+
         })
-        $('.clear_all').click(function() {
-            myPlaylist.remove()
+        $('.clear_all').click(function () {
+            myPlaylist.remove();
         })
     }
 });

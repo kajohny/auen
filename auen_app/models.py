@@ -103,3 +103,10 @@ class AlbumSchema(ma.Schema):
 album_schema = AlbumSchema()
 albums_schema = AlbumSchema(many=True)
 
+class Releases(db.Model):
+    __tablename__ = 'releases'
+    id = db.Column(db.Integer, primary_key=True)    
+    album_title = db.Column(db.String(255))
+    album_img = db.Column(db.String(255))
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))    
+

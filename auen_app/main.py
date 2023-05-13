@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import func, and_, or_
-from .models import User, Music, Author, Favourites, Albums, Genres, Playlists, Audios, PlaylistMusic
+from .models import User, Music, Author, Favourites, Albums, Genres, Playlists, Audios, PlaylistMusic, Releases
 from . import db
 import os
 from PIL import Image
@@ -310,13 +310,37 @@ def remove_playlist():
 @login_required
 def upload():
     if request.method == "POST":
-        file = request.files['file']
-        title = request.form.get('title')
-        file.save(os.path.join("auen/auen_app/static/audio", file.filename))
+        files = request.files.getlist('file')
+        titles = request.form.getlist('title')
+        
+        if(len(files) > 1):
+            album_title = request.form.get('album_title')
+        else:
+            album_title = request.form.get('title')
 
-        add_audio = Audios(title = title, source="/static/audio/" + file.filename, artist_id=current_user.id)
-        db.session.add(add_audio)
+        img_file = request.files['img-file']
+
+        if img_file.filename:
+            img_file.save(os.path.join("auen/auen_app/static/images/album", img_file.filename))
+            release = Releases(album_title = album_title, album_img = 'images/album/' + img_file.filename, author_id=current_user.id)
+        else:
+            release = Releases(album_title = album_title, album_img = 'images/album/images.jfif', author_id=current_user.id)
+        db.session.add(release)
         db.session.commit()
+
+        release = Releases.query.filter_by(album_title=album_title).first()
+
+        for i in range(len(files)):
+            print(files[i].filename)
+            files[i].save(os.path.join("auen/auen_app/static/audio", files[i].filename))
+            add_audio = Audios(title = titles[i], source="/static/audio/" + files[i].filename, album_id = release.id, artist_id = current_user.id)
+            db.session.add(add_audio)
+            db.session.commit()
+        # file.save(os.path.join("auen_app/static/audio", file.filename))
+
+        # add_audio = Audios(title = title, source="/static/audio/" + file.filename, artist_id=current_user.id)
+        # db.session.add(add_audio)
+        # db.session.commit()
         return render_template('upload.html')
     return render_template('upload.html')
 
@@ -324,7 +348,9 @@ def upload():
 def single_artist(artist_id):
     artist_single = User.query.filter_by(id=artist_id).first()
 
-    audios = db.session.query(Audios.title, Audios.source, User.name).join(User, Audios.artist_id == User.id).filter(User.id == artist_id).all()
+    audios = db.session.query(Audios.id, Audios.title, Audios.source, User.name, Releases.album_img)\
+            .join(User, Audios.artist_id == User.id).join(Releases, Releases.id == Audios.album_id)\
+            .filter(User.id == artist_id).all()
 
     return render_template('artist_page.html', artist_single=artist_single, audios=audios)
 
