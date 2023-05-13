@@ -321,7 +321,7 @@ def upload():
         img_file = request.files['img-file']
 
         if img_file.filename:
-            img_file.save(os.path.join("auen/auen_app/static/images/album", img_file.filename))
+            img_file.save(os.path.join("auen_app/static/images/album", img_file.filename))
             release = Releases(album_title = album_title, album_img = 'images/album/' + img_file.filename, author_id=current_user.id)
         else:
             release = Releases(album_title = album_title, album_img = 'images/album/images.jfif', author_id=current_user.id)
@@ -332,7 +332,7 @@ def upload():
 
         for i in range(len(files)):
             print(files[i].filename)
-            files[i].save(os.path.join("auen/auen_app/static/audio", files[i].filename))
+            files[i].save(os.path.join("auen_app/static/audio", files[i].filename))
             add_audio = Audios(title = titles[i], source="/static/audio/" + files[i].filename, album_id = release.id, artist_id = current_user.id)
             db.session.add(add_audio)
             db.session.commit()
@@ -367,10 +367,10 @@ def edit_pfp():
         file = request.files['file']
         
         if file and allowed_file(file.filename):
-            file.save(os.path.join("auen/auen_app/static/images/pfp", file.filename))
-            image = Image.open('auen/auen_app/static/images/pfp/' + file.filename)
+            file.save(os.path.join("auen_app/static/images/pfp", file.filename))
+            image = Image.open('auen_app/static/images/pfp/' + file.filename)
             new_image = image.resize((360, 360))
-            new_image.save(os.path.join("auen/auen_app/static/images/pfp", file.filename))
+            new_image.save(os.path.join("auen_app/static/images/pfp", file.filename))
             user = User.query.filter_by(id = current_user.id).first()
             user.image = "/images/pfp/" + file.filename
             db.session.commit()
