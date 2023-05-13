@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import func, and_, or_
-from .models import User, Music, Author, Favourites, Albums, Genres, Playlists, Audios, PlaylistMusic, Releases
+from .models import User, Music, Author, Favourites, Albums, Genres, Playlists, Audios, PlaylistMusic, Releases, Followers
 from . import db
 import os
 import re
@@ -347,8 +347,26 @@ def single_artist(artist_id):
     audios = db.session.query(Audios.id, Audios.title, Audios.source, User.name, Releases.album_img)\
             .join(User, Audios.artist_id == User.id).join(Releases, Releases.id == Audios.album_id)\
             .filter(User.id == artist_id).all()
+    
+    is_followed = Followers.query.filter_by(follower_id=current_user.id, followed_id=artist_id).first()
+    followed_all = Followers.query.filter_by(followed_id=artist_id).all()
+    follower_all = Followers.query.filter_by(follower_id=artist_id).all()
 
-    return render_template('artist_page.html', artist_single=artist_single, audios=audios)
+    counter_audio = 0
+    counter_followed = 0
+    counter_followers = 0
+
+    for audio in audios:
+        counter_audio += 1
+
+    for i in followed_all:
+        counter_followed += 1
+
+    for i in follower_all:
+        counter_followers += 1
+
+    return render_template('artist_page.html', artist_single=artist_single, audios=audios, counter_audio=counter_audio, 
+                           counter_followed=counter_followed, counter_followers=counter_followers, is_followed=is_followed)
 
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -373,3 +391,26 @@ def edit_pfp():
             return render_template("profile.html", user=user)
         else:
             return redirect(url_for('main.profile'))
+        
+@main.route('/following/follow', methods=["POST"])
+@login_required
+def follow():
+    followed_id = request.form.get('followed_id')
+
+    follower = Followers(follower_id=current_user.id, followed_id=followed_id)
+    db.session.add(follower)
+    db.session.commit()
+
+    return "followed"
+
+
+@main.route('/following/unfollow', methods=["POST"])
+@login_required
+def unfollow():
+    followed_id = request.form.get('followed_id')
+
+    follower = Followers.query.filter_by(follower_id=current_user.id, followed_id=followed_id).first()
+    db.session.delete(follower)
+    db.session.commit()
+
+    return "unfollowed"

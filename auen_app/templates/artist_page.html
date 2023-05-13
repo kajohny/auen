@@ -10,8 +10,22 @@
             <h2>{{ artist_single.name }}</h2>
             <p class="singer_name">Singer</p>
             <div class="about_artist">
-                Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in<br> reprehenderit in voluptate velit esse cillum dolor... <a href="#">Read More</a>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Followers</th>
+                            <th scope="col">Following</th>
+                            <th scope="col">Tracks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">{{counter_followed}}</th>
+                            <td>{{counter_followers}}</td>
+                            <td>{{counter_audio}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="album_btn">
                 <a href="#" class="ms_btn play_btn"><span class="play_all"><img
@@ -20,6 +34,10 @@
                 <a href="#" class="ms_btn"><span class="play_all"><img
                             src="{{ url_for('static', filename='images/svg/add_q.svg') }}" alt="">Add To
                         Queue</span></a>
+                {% if current_user.is_authenticated %}
+                <a href="#" class="ms_btn follow_btn {{'follow' if is_followed == None else 'unfollow'}}" id="follow"
+                    followed_id="{{ artist_single.id }}">{{'Follow' if is_followed == None else 'Unfollow' }}</a>
+                {% endif %}
             </div>
         </div>
         <div class="album_more_optn ms_more_icon">
@@ -78,35 +96,37 @@
         <a href="#" class="ms_btn">view more</a>
     </div>
 </div>
-<div class="">
-    <script>
-        $(document).ready(function () {
-            $('.fv_btn').click(function () {
-                let el = $(this)
-                let action = 'add';
-                let firstClass = 'far';
-                let secondClass = 'fas';
+<script>
+    $(document).ready(function () {
+        $('.follow_btn').click(function () {
+            let el = $(this)
+            let action = 'follow';
+            let firstClass = 'follow';
+            let firstText = 'Follow'
+            let secondClass = 'unfollow';
+            let secondText = 'Unfollow'
 
-                if (el.hasClass('fas')) {
-                    action = 'remove';
-                    firstClass = 'fas';
-                    secondClass = 'far';
+            if (el.hasClass('unfollow')) {
+                action = 'unfollow';
+                firstClass = 'unfollow';
+                firstText = 'Unfollow';
+                secondClass = 'follow';
+                secondText = 'Follow';
+            }
+            $.ajax({
+                type: "POST",
+                url: "/following/" + action,
+                data: {
+                    followed_id: $(this).attr("followed_id")
+                },
+                success: function (resp) {
+                    el.removeClass(firstClass).addClass(secondClass).text(secondText)
+                },
+                error: function (error) {
+                    console.log(error)
                 }
-                $.ajax({
-                    type: "POST",
-                    url: "/favourites/" + action,
-                    data: {
-                        music_id: $(this).attr("music_id")
-                    },
-                    success: function (resp) {
-                        el.removeClass(firstClass).addClass(secondClass)
-                    },
-                    error: function (error) {
-                        console.log(error)
-                    }
-                })
             })
         })
-    </script>
-</div>
+    })
+</script>
 {% endblock %}

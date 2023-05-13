@@ -1,6 +1,7 @@
 from flask_login import UserMixin
 from . import db
 from . import ma
+from sqlalchemy.sql import func
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -110,3 +111,17 @@ class Releases(db.Model):
     album_img = db.Column(db.String(255))
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))    
 
+class Followers(db.Model):
+    __tablename__ = 'followers'
+    id = db.Column(db.Integer, primary_key=True)    
+    follower_id = db.Column(db.Integer, db.ForeignKey('users.id'))    
+    followed_id = db.Column(db.Integer, db.ForeignKey('users.id'))    
+    time_followed = db.Column(db.DateTime(timezone=True), server_default=func.now())
+
+
+class FollowerSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name')
+
+followers_schema = FollowerSchema(many=True)
+   

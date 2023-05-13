@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import func, and_, or_
-from .models import User, Music, Author, Albums, Favourites, Playlists, PlaylistMusic, Releases, Audios,\
-    musics_schema, user_schema, playlist_schema, albums_schema 
+from .models import User, Music, Author, Albums, Favourites, Playlists, PlaylistMusic, Releases, Audios, Followers,\
+    musics_schema, user_schema, playlist_schema, albums_schema, followers_schema
 from . import db
 import os
 import re
@@ -204,3 +204,37 @@ def upload(artist_id):
 
         return jsonify(['success'])
     return jsonify(['upload'])
+
+@api.route('/following/follow/api/<user_id>', methods=["POST"])
+def follow(user_id):
+    if request.method == "POST":
+        followed_id = request.form.get('followed_id')
+
+        follower = Followers(follower_id=user_id, followed_id=followed_id)
+        db.session.add(follower)
+        db.session.commit()
+
+        return jsonify(['followed'])
+    return jsonify(['follow'])
+
+@api.route('/following/unfollow/api/<user_id>', methods=["POST"])
+def unfollow(user_id):
+    if request.method == "POST":
+        followed_id = request.form.get('followed_id')
+
+        follower = Followers.query.filter_by(follower_id=user_id, followed_id=followed_id).first()
+        db.session.delete(follower)
+        db.session.commit()
+
+        return jsonify(['unfollowed'])
+    return jsonify(['unfollow'])
+
+@api.route('/followers/api/<artist_id>', methods=["GET"])
+def followers(artist_id):
+    followers = db.session.query(User.id, User.name).join(Followers, Followers.follower_id == User.id).filter(Followers.followed_id == artist_id).all()
+
+    return followers_schema.jsonify(followers)
+
+@api.route('/followed/api/<user_id>', methods=["GET"])
+def followed(user_id):
+    followed = db.session.query(User.id, User.name).join(Followers, Followers.followed_id == User.id).filter(Followers.follower_id == user_id).all()
