@@ -83,6 +83,7 @@ class Audios(db.Model):
     genre_id = db.Column(db.Integer, db.ForeignKey('genres.id'))
     artist_id = db.Column(db.Integer, db.ForeignKey('author.id'))
     album_id = db.Column(db.Integer, db.ForeignKey('releases.id'))
+    time_added = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
 class ArtistsSchema(ma.Schema):
     class Meta:
