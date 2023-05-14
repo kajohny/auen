@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import func, and_, or_, desc
 from .models import User, Music, Author, Favourites, Albums, Genres, Playlists, Audios, PlaylistMusic, Releases, Followers
 from . import db
+from sqlalchemy import cast, Date
 import os
 import re
 from PIL import Image
@@ -419,7 +420,7 @@ def unfollow():
 @login_required
 def feed():
     musics = db.session.query(Audios.id, Audios.title, Audios.source, User.name, Releases.album_img, Releases.album_title, 
-                              func.to_char(Audios.time_added, 'DD-MM-YYYY HH24:MI:SS').label('time_added'))\
+                              (Audios.time_added.cast(Date)).label('time_added'))\
             .join(User, Audios.artist_id == User.id).join(Releases, and_(Releases.id == Audios.album_id, Releases.author_id == User.id))\
             .join(Followers, Followers.followed_id == User.id).filter(Followers.follower_id == current_user.id)\
             .group_by(Audios.id, User.name, Audios.title, Audios.source, Audios.time_added, Releases.album_title, 
