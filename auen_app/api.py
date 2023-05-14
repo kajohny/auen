@@ -3,7 +3,7 @@ from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import func, and_, or_
 from .models import User, Music, Author, Albums, Favourites, Playlists, PlaylistMusic, Releases, Audios, Followers,\
-    musics_schema, user_schema, playlist_schema, albums_schema, followers_schema
+    musics_schema, user_schema, playlist_schema, albums_schema, followers_schema, artists_schema
 from . import db
 import os
 import re
@@ -238,3 +238,28 @@ def followers(artist_id):
 @api.route('/followed/api/<user_id>', methods=["GET"])
 def followed(user_id):
     followed = db.session.query(User.id, User.name).join(Followers, Followers.followed_id == User.id).filter(Followers.follower_id == user_id).all()
+
+    return followers_schema.jsonify(followed)
+
+@api.route('/show_albums/api/<artist_id>', methods=["GET"])
+def show_albums(artist_id):
+    releases = db.session.query(Releases.id, Releases.album_title, Releases.album_img, User.name.label('author_name'))\
+        .join(User, User.id == Releases.author_id).filter(Releases.author_id == artist_id).all()
+
+    return albums_schema.jsonify(releases)
+
+@api.route('/show_songs/api/<album_id>', methods=["GET"])
+def show_songs(album_id):
+    musics = db.session.query(Audios.id, Audios.title.label('music_title'), Audios.source.label('music_source'), User.name.label('author_name'), 
+                              Releases.album_img)\
+        .join(User, Audios.artist_id == User.id)\
+        .join(Releases, Releases.id == Audios.album_id)\
+        .filter(Releases.id == album_id)
+    
+    return musics_schema.jsonify(musics)
+
+@api.route('/show_artists/api/', methods=["GET"])
+def show_artists():
+    artists = db.session.query(User.id, User.name, User.image).filter(User.isartist == True)
+    
+    return artists_schema.jsonify(artists)
