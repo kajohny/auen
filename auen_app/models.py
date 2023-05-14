@@ -95,6 +95,12 @@ class MusicSchema(ma.Schema):
     class Meta:
         fields = ('id', 'music_title', 'music_source', 'author_name', 'album_img')
 
+class MusicFeedSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'title', 'source', 'name', 'album_img', 'album_title', 'time_added')
+
+music_feed_schema = MusicFeedSchema(many=True)
+
 music_schema = MusicSchema()
 musics_schema = MusicSchema(many=True)
 

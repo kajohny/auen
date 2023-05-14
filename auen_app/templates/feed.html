@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="ms_weekly_wrapper">
+    <div class="ms_weekly_inner">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ms_heading">
+                    <h1>Feed</h1>
+                </div>
+            </div>
+            {% for music in musics %}
+
+            <div class="ms_weekly_box">
+                <div class="weekly_left">
+                    <span class="w_top_no">
+                        {{ loop.index}}
+                    </span>
+                    <div class="w_top_song">
+                        <div class="w_tp_song_img">
+                            <img src="{{ url_for('static', filename=music.album_img) }}" alt="" class="img-fluid">
+                            <div class="ms_song_overlay">
+                            </div>
+                            <div class="ms_play_icon" music_source="{{ music.source }}" musics="{{ musics }}"
+                                music_id="{{ music.id }}" artist_name="{{ music.name }}" music_title="{{ music.title }}"
+                                album_img="{{ music.album_img }}">
+                                <img src="{{ url_for('static', filename='images/svg/play.svg') }}" alt="">
+                            </div>
+                        </div>
+                        <div class="w_tp_song_name">
+                            <h3><a href="#">{{ music.title }}</a></h3>
+                            <p>{{ music.name }}</p>
+                            <p>Posted: {{ music.time_added }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="weekly_right">
+                    <i class="far fa-heart text-white" style="font-size: 24px"></i>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
