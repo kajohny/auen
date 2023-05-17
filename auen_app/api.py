@@ -5,6 +5,7 @@ from sqlalchemy.sql import func, and_, or_, desc
 from .models import User, Music, Author, Albums, Favourites, Playlists, PlaylistMusic, Releases, Audios, Followers,\
     musics_schema, user_schema, playlist_schema, albums_schema, followers_schema, artists_schema, music_feed_schema
 from . import db
+from sqlalchemy import cast, DateTime
 import os
 import re
 
@@ -267,7 +268,7 @@ def show_artists():
 @api.route('/feed/api/<user_id>', methods=["GET"])
 def feed(user_id):
     musics = db.session.query(Audios.id, Audios.title, Audios.source, User.name, Releases.album_img, Releases.album_title, 
-                              func.to_char(Audios.time_added, 'DD-MM-YYYY HH24:MI:SS').label('time_added'))\
+                              (Audios.time_added.cast(DateTime)).label('time_added'))\
             .join(User, Audios.artist_id == User.id).join(Releases, and_(Releases.id == Audios.album_id, Releases.author_id == User.id))\
             .join(Followers, Followers.followed_id == User.id).filter(Followers.follower_id == user_id)\
             .group_by(Audios.id, User.name, Audios.title, Audios.source, Audios.time_added, Releases.album_title, 
