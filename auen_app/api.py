@@ -265,6 +265,15 @@ def show_artists():
     
     return artists_schema.jsonify(artists)
 
+@api.route('/search/api/', methods=["GET"])
+def search():
+    title = request.form.get('search')
+    search = "%{}%".format(title)
+    authors = db.session.query(Author.id, Author.author_name.label('name'), Author.author_photo.label('image')).\
+                filter(Author.author_name.ilike(search)).all()
+    
+    return artists_schema.jsonify(authors)
+
 @api.route('/feed/api/<user_id>', methods=["GET"])
 def feed(user_id):
     musics = db.session.query(Audios.id, Audios.title, Audios.source, User.name, Releases.album_img, Releases.album_title, 
