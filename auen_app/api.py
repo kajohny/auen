@@ -269,7 +269,7 @@ def show_artists():
 def search():
     title = request.form.get('search')
     search = "%{}%".format(title)
-    authors = db.session.query(Author.id, Author.author_name.label('name'), Author.author_photo.label('image')).\
+    authors = db.session.query(Author.id, Author.author_name.label('name'), Author.email, Author.author_photo.label('image')).\
                 filter(Author.author_name.ilike(search)).all()
     
     return artists_schema.jsonify(authors)

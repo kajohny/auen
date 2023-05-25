@@ -31,6 +31,7 @@ class Author(db.Model):
     __tablename__ = 'author'
     __table_args__ = {'extend_existing':True}
     id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100))
     genre_id = db.Column(db.Integer, db.ForeignKey('genres.id'))
     author_name = db.Column(db.String(255), unique=True)
     author_photo = db.Column(db.String(255))
@@ -87,7 +88,7 @@ class Audios(db.Model):
 
 class ArtistsSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'image')
+        fields = ('id', 'name', 'email', 'image')
 
 artist_schema = ArtistsSchema()
 artists_schema = ArtistsSchema(many=True)
