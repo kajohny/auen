@@ -293,3 +293,19 @@ def stream():
     db.session.commit()
     
     return jsonify(['+1 stream'])
+
+@api.route('/uploaded_songs/api/', methods=["GET"])
+def show_uploaded_songs():
+    audios = db.session.query(Audios.id, Audios.title.label("music_title"), Audios.source.label("music_source"),
+                               User.name.label("author_name"), Releases.album_img, Audios.streams)\
+                        .join(User, User.id==Audios.artist_id).join(Releases, Releases.id==Audios.album_id).all()
+    
+    return musics_schema.jsonify(audios)
+
+@api.route('/uploaded_songs/api/<artist_id>', methods=["GET"])
+def show_uploaded_songs_single(artist_id):
+    audios = db.session.query(Audios.id, Audios.title.label("music_title"), Audios.source.label("music_source"),
+                               User.name.label("author_name"), Releases.album_img, Audios.streams)\
+                        .join(User, User.id == Audios.artist_id).join(Releases, Releases.id == Audios.album_id).filter(User.id == artist_id)
+    
+    return musics_schema.jsonify(audios)
