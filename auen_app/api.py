@@ -284,3 +284,12 @@ def feed(user_id):
                       Releases.album_img).order_by(desc('time_added')).all()
     
     return music_feed_schema.jsonify(musics)
+
+@api.route('/stream/api/', methods=["POST"])
+def stream():
+    music_title = request.form.get("music_title")
+
+    db.session.query(Audios).filter(Audios.title == music_title).update({'streams': Audios.streams + 1})
+    db.session.commit()
+    
+    return jsonify(['+1 stream'])

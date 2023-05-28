@@ -428,3 +428,11 @@ def feed():
     
 
     return render_template("feed.html", musics=musics)
+
+@main.route('/stream', methods=["POST"])
+def stream():
+    music_title = request.form.get("music_title")
+    db.session.query(Audios).filter(Audios.title == music_title).update({'streams': Audios.streams + 1})
+    db.session.commit()
+
+    return '+1 stream'
