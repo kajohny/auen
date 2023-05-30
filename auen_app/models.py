@@ -7,7 +7,7 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
     __table_args__ = {'extend_existing':True}
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
+    name = db.Column(db.String(100), unique=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     image = db.Column(db.String(100))
@@ -84,8 +84,9 @@ class Audios(db.Model):
     source = db.Column(db.String(255))
     streams = db.Column(db.Integer, default=0)
     genre_id = db.Column(db.Integer, db.ForeignKey('genres.id'))
-    artist_id = db.Column(db.Integer, db.ForeignKey('author.id'))
+    artist_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     album_id = db.Column(db.Integer, db.ForeignKey('releases.id'))
+    featured_artist = db.Column(db.String, db.ForeignKey('users.name'))
     time_added = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
 class ArtistsSchema(ma.Schema):
@@ -99,11 +100,11 @@ class MusicSchema(ma.Schema):
     class Meta:
         fields = ('id', 'music_title', 'music_source', 'author_name', 'album_img', 'streams')
 
-class MusicFeedSchema(ma.Schema):
+class AudioSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'title', 'source', 'name', 'album_img', 'album_title', 'time_added')
+        fields = ('id', 'title', 'source', 'name', 'album_img', 'album_title', 'time_added', 'streams', 'featured_artist')
 
-music_feed_schema = MusicFeedSchema(many=True)
+audio_schema = AudioSchema(many=True)
 
 music_schema = MusicSchema()
 musics_schema = MusicSchema(many=True)
@@ -140,5 +141,21 @@ class FollowerSchema(ma.Schema):
     class Meta:
         fields = ('id', 'name')
 
-followers_schema = FollowerSchema(many=True)
-   
+followers_schema = FollowerSchema(many=True)  
+
+class WaitingReleases(db.Model):
+    __tablename__ = 'waitingList'
+    id = db.Column(db.Integer, primary_key=True)    
+    album_title = db.Column(db.String(255))
+    album_img = db.Column(db.String(255))
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))    
+
+class WaitingAudios(db.Model):
+    __tablename__ = 'waitingAudios'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255))
+    source = db.Column(db.String(255))
+    genre_id = db.Column(db.Integer, db.ForeignKey('genres.id'))
+    artist_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    album_id = db.Column(db.Integer, db.ForeignKey('waitingList.id'))
+    featured_artist = db.Column(db.String, db.ForeignKey('users.name'))

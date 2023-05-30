@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import func, and_, or_, desc
-from .models import User, Music, Author, Favourites, Albums, Genres, Playlists, Audios, PlaylistMusic, Releases, Followers
+from .models import User, Music, Author, Favourites, Albums, Genres, Playlists, Audios, PlaylistMusic, Releases, Followers, WaitingAudios, WaitingReleases
 from . import db
 from sqlalchemy import cast, DateTime
 import os
@@ -314,6 +314,7 @@ def upload():
     if request.method == "POST":
         files = request.files.getlist('file')
         titles = request.form.getlist('title')
+        artist_name = request.form.getlist('artist_name')
         
         if(len(files) > 1):
             album_title = request.form.get('album_title')
@@ -323,23 +324,82 @@ def upload():
         img_file = request.files['img-file']
 
         if img_file.filename:
-            img_file.save(os.path.join("auen_app/static/images/album", img_file.filename))
-            release = Releases(album_title = album_title, album_img = 'images/album/' + img_file.filename, author_id=current_user.id)
+            img_file.save(os.path.join("auen_app/static/images/albums", img_file.filename))
+            waiting_release = WaitingReleases(album_title = album_title, album_img = 'images/albums/' + img_file.filename, author_id=current_user.id)
         else:
-            release = Releases(album_title = album_title, album_img = 'images/album/images.jfif', author_id=current_user.id)
-        db.session.add(release)
+            waiting_release = WaitingReleases(album_title = album_title, album_img = 'images/albums/images.jfif', author_id=current_user.id)
+        db.session.add(waiting_release)
         db.session.commit()
 
-        release = Releases.query.filter_by(album_title=album_title).first()
+        waiting_release = WaitingReleases.query.filter_by(album_title=album_title).first()
 
         for i in range(len(files)):
             fixedFilename = re.sub('[^A-Za-z0-9.]+', '', files[i].filename)
             files[i].save(os.path.join("auen_app/static/audio", fixedFilename))
-            add_audio = Audios(title = titles[i], source="/static/audio/" + fixedFilename, album_id = release.id, artist_id = current_user.id)
+            if artist_name[i] == "":
+                add_audio = WaitingAudios(title = titles[i], source="/static/audio/" + fixedFilename, album_id = waiting_release.id, 
+                                      artist_id = current_user.id)
+            else:
+                add_audio = WaitingAudios(title = titles[i], source="/static/audio/" + fixedFilename, album_id = waiting_release.id, 
+                                      artist_id = current_user.id, featured_artist = artist_name[i])
             db.session.add(add_audio)
             db.session.commit()
-        return render_template('upload.html')
+
+        return redirect(url_for('main.waiting_list'))
     return render_template('upload.html')
+
+@main.route('/approval_list', methods=['GET', 'POST'])
+@login_required
+def waiting_list():
+    musics = db.session.query(WaitingAudios.id, WaitingAudios.title, WaitingAudios.source, User.name, 
+                              WaitingReleases.album_img, WaitingReleases.album_title, WaitingAudios.featured_artist)\
+                        .join(User, WaitingAudios.artist_id == User.id)\
+                        .join(WaitingReleases, and_(WaitingReleases.id == WaitingAudios.album_id, WaitingReleases.author_id == User.id))\
+                        .filter(WaitingAudios.artist_id == current_user.id)\
+                        .group_by(WaitingAudios.id, User.name, WaitingAudios.title, WaitingAudios.source, WaitingReleases.album_title, 
+                      WaitingReleases.album_img).all()
+
+    return render_template("waiting_list.html", musics=musics)
+
+@main.route('/upload_audio', methods=["POST"])
+@login_required
+def upload_audio():
+    musics = db.session.query(WaitingAudios.id, WaitingAudios.title, WaitingAudios.source, User.name, 
+                              WaitingReleases.album_img, WaitingReleases.album_title, WaitingAudios.featured_artist)\
+                        .join(User, WaitingAudios.artist_id == User.id)\
+                        .join(WaitingReleases, and_(WaitingReleases.id == WaitingAudios.album_id, WaitingReleases.author_id == User.id))\
+                        .filter(WaitingAudios.artist_id == current_user.id)\
+                        .group_by(WaitingAudios.id, User.name, WaitingAudios.title, WaitingAudios.source, WaitingReleases.album_title, 
+                      WaitingReleases.album_img).all()
+    
+    waiting_releases = db.session.query(WaitingReleases.album_title, WaitingReleases.album_img, WaitingReleases.author_id).\
+                        filter(WaitingReleases.author_id == current_user.id).first()
+    
+    add_release = Releases(album_title=waiting_releases.album_title, album_img=waiting_releases.album_img, author_id=current_user.id)
+    db.session.add(add_release)
+    db.session.commit()
+
+    release = Releases.query.filter_by(album_title=waiting_releases.album_title).first()
+
+    for music in musics:
+        add_audio = Audios(title=music.title, source=music.source, artist_id=current_user.id, album_id=release.id, 
+                           featured_artist=music.featured_artist)
+        db.session.add(add_audio)
+        db.session.commit()
+
+    to_delete_audios = WaitingAudios.query.filter_by(artist_id=current_user.id).all()
+    to_delete_releases = WaitingReleases.query.filter_by(author_id=current_user.id).all()
+
+    for i in range(len(to_delete_audios)):
+        to_delete_audio = WaitingAudios.query.filter_by(artist_id=current_user.id).first()
+        db.session.delete(to_delete_audio)
+        db.session.commit()
+    for i in range(len(to_delete_releases)):
+        to_delete_release = WaitingReleases.query.filter_by(author_id=current_user.id).first()
+        db.session.delete(to_delete_release)
+        db.session.commit()
+
+    return redirect(url_for('main.your_tracks'))
 
 @main.route('/artists/<artist_id>', methods=["GET"])
 def single_artist(artist_id):
@@ -392,6 +452,19 @@ def edit_pfp():
             return render_template("profile.html", user=user)
         else:
             return redirect(url_for('main.profile'))
+        
+@main.route('/your_tracks', methods=["GET"])
+@login_required
+def your_tracks():
+    musics = db.session.query(Audios.id, Audios.title, Audios.source, User.name, 
+                              Releases.album_img, Releases.album_title, Audios.featured_artist)\
+                        .join(User, Audios.artist_id == User.id)\
+                        .join(Releases, and_(Releases.id == Audios.album_id, Releases.author_id == User.id))\
+                        .filter(or_(Audios.artist_id == current_user.id, Audios.featured_artist == current_user.name))\
+                        .group_by(Audios.id, User.name, Audios.title, Audios.source, Releases.album_title, 
+                      Releases.album_img).order_by(User.name).all()
+    
+    return render_template('your_tracks.html', musics=musics)
         
 @main.route('/following/follow', methods=["POST"])
 @login_required
