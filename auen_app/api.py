@@ -182,7 +182,7 @@ def upload(artist_id):
     else:
         album_title = request.form.get('title')
 
-        img_file = request.files['img-file']
+    img_file = request.files['img-file']
 
     if img_file.filename:
         img_file.save(os.path.join("auen_app/static/images/albums", img_file.filename))
