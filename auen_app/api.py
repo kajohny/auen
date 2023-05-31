@@ -234,7 +234,7 @@ def upload(artist_id):
     db.session.add(add_audio)
     db.session.commit()
 
-    return "uploaded to approval list"
+    return jsonify(['success'])
 @api.route('/approval_list/<artist_id>', methods=["GET"])
 def approval_list(artist_id):
     musics = db.session.query(WaitingAudios.id, WaitingAudios.title, WaitingAudios.source, User.name, 
