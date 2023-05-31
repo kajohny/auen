@@ -20,8 +20,6 @@ def login():
         user = User.query.filter_by(email=email).first()
         if not user or not check_password_hash(user.password, password):
             return jsonify(["error"])
-        
-        print('hello')
         return jsonify(["success"])
     return jsonify(['hello'])
 
@@ -201,10 +199,10 @@ def upload(artist_id):
         files[i].save(os.path.join("auen_app/static/audio", fixedFilename))
         if artist_name[i] == "":
             add_audio = WaitingAudios(title = titles[i], source="/static/audio/" + fixedFilename, album_id = waiting_release.id, 
-                                      artist_id = current_user.id)
+                                      artist_id = artist_id)
         else:
             add_audio = WaitingAudios(title = titles[i], source="/static/audio/" + fixedFilename, album_id = waiting_release.id, 
-                                      artist_id = current_user.id, featured_artist = artist_name[i])
+                                      artist_id = artist_id, featured_artist = artist_name[i])
         db.session.add(add_audio)
         db.session.commit()
 
