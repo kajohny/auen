@@ -421,7 +421,7 @@ def collaboration_accept(second_artist):
     return jsonify(['accepted'])
 
 @api.route('/collaboration/deny/api/<second_artist>', methods=["POST"])
-def collaboration_accept(second_artist):
+def collaboration_deny(second_artist):
     first_artist = request.form.get('first_artist')
 
     collaboration = Collaborations.query.filter_by(first_artist=first_artist, second_artist=second_artist).first()
