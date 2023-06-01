@@ -237,15 +237,15 @@ def upload(artist_id):
     return jsonify(['success'])
 @api.route('/approval_list/<artist_id>', methods=["GET"])
 def approval_list(artist_id):
-    musics = db.session.query(WaitingAudios.id, WaitingAudios.title, WaitingAudios.source, User.name, 
-                              WaitingReleases.album_img, WaitingReleases.album_title, WaitingAudios.featured_artist)\
+    musics = db.session.query(WaitingAudios.id, WaitingAudios.title.label('music_title'), WaitingAudios.source.label('music_source'), 
+                              User.name.label('author_name'), WaitingReleases.album_img, WaitingReleases.album_title, WaitingAudios.featured_artist)\
                         .join(User, WaitingAudios.artist_id == User.id)\
                         .join(WaitingReleases, and_(WaitingReleases.id == WaitingAudios.album_id, WaitingReleases.author_id == User.id))\
                         .filter(WaitingAudios.artist_id == artist_id)\
                         .group_by(WaitingAudios.id, User.name, WaitingAudios.title, WaitingAudios.source, WaitingReleases.album_title, 
                       WaitingReleases.album_img).all()
     
-    return audio_schema.jsonify(musics)
+    return musics_schema.jsonify(musics)
 
 @api.route('/upload_audio/<artist_id>', methods=["POST"])
 @login_required
