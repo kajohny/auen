@@ -285,7 +285,7 @@ def upload_audio(artist_id):
         db.session.delete(to_delete_release)
         db.session.commit()
 
-    return "uploaded to auen"
+    return jsonify(['success'])
 
 @api.route('/following/follow/api/<user_id>', methods=["POST"])
 def follow(user_id):
