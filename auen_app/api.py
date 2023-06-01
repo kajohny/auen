@@ -214,10 +214,10 @@ def upload(artist_id):
     img_file = request.files['img-file']
 
     if img_file.filename:
-        img_file.save(os.path.join("auen_app/static/images/albums", img_file.filename))
-        waiting_release = WaitingReleases(album_title = title, album_img = 'images/albums/' + img_file.filename, author_id=artist_id)
+        img_file.save(os.path.join("auen_app/static/images/album", img_file.filename))
+        waiting_release = WaitingReleases(album_title = title, album_img = 'images/album/' + img_file.filename, author_id=artist_id)
     else:
-        waiting_release = WaitingReleases(album_title = title, album_img = 'images/albums/images.jfif', author_id=artist_id)
+        waiting_release = WaitingReleases(album_title = title, album_img = 'images/album/images.jfif', author_id=artist_id)
     db.session.add(waiting_release)
     db.session.commit()
 
