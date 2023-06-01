@@ -225,7 +225,7 @@ def upload(artist_id):
 
     fixedFilename = re.sub('[^A-Za-z0-9.]+', '', file.filename)
     file.save(os.path.join("auen_app/static/audio", fixedFilename))
-    if artist_name == "":
+    if artist_name is None:
         add_audio = WaitingAudios(title = title, source="/static/audio/" + fixedFilename, album_id = waiting_release.id, 
                                     artist_id = artist_id)
     else:
