@@ -391,11 +391,11 @@ def show_uploaded_songs_single(artist_id):
     
     return musics_schema.jsonify(audios)
 
-@api.route('/collaborations/api/', methods=["GET"])
-def collaborations():
+@api.route('/collaborations/api/<second_artist>', methods=["GET"])
+def collaborations(second_artist):
     collaborations = db.session.query(Collaborations.first_artist, User.name, User.image)\
                     .join(User, User.id == Collaborations.first_artist)\
-                    .filter(Collaborations.second_artist == current_user.id, Collaborations.isapproved == False).all()
+                    .filter(Collaborations.second_artist == second_artist, Collaborations.isapproved == False).all()
     
     return collaboration_schema.jsonify(collaborations)
 
