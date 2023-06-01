@@ -159,3 +159,16 @@ class WaitingAudios(db.Model):
     artist_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     album_id = db.Column(db.Integer, db.ForeignKey('waitingList.id'))
     featured_artist = db.Column(db.String(100))
+
+class Collaborations(db.Model):
+    __tablename__ = 'collaborations'
+    id = db.Column(db.Integer, primary_key=True)
+    first_artist = db.Column(db.Integer, db.ForeignKey('users.id'))
+    second_artist = db.Column(db.Integer, db.ForeignKey('users.id'))
+    isapproved = db.Column(db.Boolean, default=False)
+
+class CollaborationSchema(ma.Schema):
+    class Meta:
+        fields = ('first_artist', 'name', 'image')
+
+collaboration_schema = CollaborationSchema(many=True)  

@@ -3,7 +3,8 @@ from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import func, and_, or_, desc
 from .models import User, Music, Author, Albums, Favourites, Playlists, PlaylistMusic, Releases, Audios, Followers, WaitingReleases, WaitingAudios,\
-    musics_schema, user_schema, playlist_schema, albums_schema, followers_schema, artists_schema, audio_schema
+    Collaborations,\
+    musics_schema, user_schema, playlist_schema, albums_schema, followers_schema, artists_schema, audio_schema, collaboration_schema
 from . import db
 from sqlalchemy import cast, DateTime
 import os
@@ -389,3 +390,42 @@ def show_uploaded_songs_single(artist_id):
                         .join(User, User.id == Audios.artist_id).join(Releases, Releases.id == Audios.album_id).filter(User.id == artist_id)
     
     return musics_schema.jsonify(audios)
+
+@api.route('collaborations/api/', methods=["GET"])
+def collaborations():
+    collaborations = db.session.query(Collaborations.first_artist, User.name, User.image)\
+                    .join(User, User.id == Collaborations.first_artist)\
+                    .filter(Collaborations.second_artist == current_user.id, Collaborations.isapproved == False).all()
+    
+    return collaboration_schema.jsonify(collaborations)
+
+@api.route('collaboration/collaborate/api/<first_artist>', methods=["POST"])
+def collaborate(first_artist):
+    second_artist = request.form.get('second_artist')
+
+    collaboration = Collaborations(first_artist=first_artist, second_artist=second_artist)
+
+    db.session.add(collaboration)
+    db.session.commit()
+
+    return jsonify(['send collab'])
+
+@api.route('/collaboration/accept/api/<second_artist>', methods=["POST"])
+def collaboration_accept(second_artist):
+    first_artist = request.form.get('first_artist')
+
+    collaboration = Collaborations.query.filter_by(first_artist=first_artist, second_artist=second_artist).first()
+    collaboration.isapproved = True
+    db.session.commit()
+
+    return jsonify(['accepted'])
+
+@api.route('/collaboration/deny/api/<second_artist>', methods=["POST"])
+def collaboration_accept(second_artist):
+    first_artist = request.form.get('first_artist')
+
+    collaboration = Collaborations.query.filter_by(first_artist=first_artist, second_artist=second_artist).first()
+    db.session.delete(collaboration)
+    db.session.commit()
+
+    return jsonify(['denied'])
