@@ -391,7 +391,7 @@ def show_uploaded_songs_single(artist_id):
     
     return musics_schema.jsonify(audios)
 
-@api.route('collaborations/api/', methods=["GET"])
+@api.route('/collaborations/api/', methods=["GET"])
 def collaborations():
     collaborations = db.session.query(Collaborations.first_artist, User.name, User.image)\
                     .join(User, User.id == Collaborations.first_artist)\
@@ -399,7 +399,7 @@ def collaborations():
     
     return collaboration_schema.jsonify(collaborations)
 
-@api.route('collaboration/collaborate/api/<first_artist>', methods=["POST"])
+@api.route('/collaboration/collaborate/api/<first_artist>', methods=["POST"])
 def collaborate(first_artist):
     second_artist = request.form.get('second_artist')
 
