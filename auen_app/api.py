@@ -399,6 +399,14 @@ def collaborations(second_artist):
     
     return collaboration_schema.jsonify(collaborations)
 
+@api.route('/collaborations_accepted/api/<first_artist>', methods=["GET"])
+def collaborations_accepted(first_artist):
+    collaborations = db.session.query(Collaborations.second_artist, User.name, User.image)\
+                    .join(User, User.id == Collaborations.second_artist)\
+                    .filter(Collaborations.first_artist == first_artist, Collaborations.isapproved == True).all()
+    
+    return collaboration_schema.jsonify(collaborations)
+
 @api.route('/collaboration/collaborate/api/<first_artist>', methods=["POST"])
 def collaborate(first_artist):
     second_artist = request.form.get('second_artist')
